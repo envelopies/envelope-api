@@ -38,4 +38,7 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+http-client.private.env.json
 application.properties
+.env

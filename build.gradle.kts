@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
@@ -36,6 +38,14 @@ dependencies {
 	compileOnly("org.projectlombok:lombok")
 	runtimeOnly("org.postgresql:postgresql")
 	annotationProcessor("org.projectlombok:lombok")
+}
+
+tasks.withType<Jar> {
+	enabled = false
+}
+
+tasks.withType<BootJar> {
+	archiveFileName = "${project.name}.jar"
 }
 
 kotlin {
