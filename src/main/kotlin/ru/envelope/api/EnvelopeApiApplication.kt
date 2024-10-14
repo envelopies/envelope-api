@@ -1,4 +1,4 @@
-package ru.envelope.envelope_api
+package ru.envelope.api
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
