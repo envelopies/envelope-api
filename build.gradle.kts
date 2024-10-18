@@ -40,10 +40,6 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 }
 
-tasks.withType<Jar> {
-	enabled = false
-}
-
 tasks.withType<BootJar> {
 	archiveFileName = "${project.name}.jar"
 }
