@@ -2,7 +2,7 @@ package ru.envelope.api.dto
 
 import jakarta.xml.bind.DatatypeConverter
 
-data class TokenRequestDto(
+data class AuthRequestDto(
     /**
      * Время аутентификации в телеграмме.
      * Является Unix Timestamp.

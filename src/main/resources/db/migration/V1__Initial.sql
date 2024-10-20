@@ -1,4 +1,4 @@
-CREATE TABLE item
+CREATE TABLE items
 (
     id          UUID    NOT NULL,
     title       VARCHAR(255) NOT NULL,
