@@ -1,6 +1,7 @@
 package ru.envelope.api.entities
 
 import jakarta.persistence.*
+import java.security.Principal
 
 @Entity
 @Table(name = "users")
@@ -25,4 +26,6 @@ data class User(
     @CollectionTable(name = "authorities", joinColumns = [JoinColumn(name = "user_id")])
     @Column(name = "authority", nullable = false)
     val authorities: Set<String> = HashSet()
-)
+): Principal {
+    override fun getName(): String = id.toString()
+}

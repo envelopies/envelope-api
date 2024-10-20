@@ -10,21 +10,20 @@ import com.nimbusds.jose.proc.SecurityContext
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.convert.converter.Converter
+import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.oauth2.jwt.JwtDecoder
-import org.springframework.security.oauth2.jwt.JwtEncoder
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder
-import org.springframework.security.oauth2.jwt.NimbusJwtEncoder
+import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
-import ru.envelope.api.auth.JwtAuthenticationConverter
 import javax.crypto.spec.SecretKeySpec
 
 @Configuration
 @EnableWebSecurity
 class AuthConfig(
     @Value("\${auth.secret}")
-    private val secretKey: String
+    private val secretKey: String,
+    private val jwtAuthenticationConverter: Converter<Jwt, AbstractAuthenticationToken>
 ) {
     private val secretKeySpec = SecretKeySpec(secretKey.toByteArray(), "HmacSHA256")
 
@@ -44,7 +43,7 @@ class AuthConfig(
         }
         .oauth2ResourceServer { c ->
             c.jwt { jc ->
-                jc.jwtAuthenticationConverter(JwtAuthenticationConverter())
+                jc.jwtAuthenticationConverter(jwtAuthenticationConverter)
             }
         }
         .build()
