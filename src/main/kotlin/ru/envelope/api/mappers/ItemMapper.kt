@@ -7,6 +7,7 @@ import java.util.function.Function
 
 object ItemMapper: Function<Item, ItemDto> {
     override fun apply(item: Item): ItemDto = ItemDto(
+        id = item.id.toString(),
         title = item.title,
         description = item.description,
         price = item.price.toDouble(),
