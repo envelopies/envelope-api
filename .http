@@ -1,0 +1,20 @@
+### Получить токен по данным из телеграмма
+POST http://localhost:8080/api/v1/auth
+Content-Type: application/json
+
+{
+  "authDate": 0,
+  "firstName": "",
+  "id": 0,
+  "lastName": "",
+  "username": "",
+  "hash": ""
+}
+
+> {%
+    client.global.set("access_token", response.body['token'])
+ %}
+
+###
+GET http://localhost:8080/api/v1/items
+Authorization: Bearer {{access_token}}
