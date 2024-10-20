@@ -11,9 +11,9 @@ services:
     volumes:
     - ./application.properties:/app/application.properties:ro
     environment:
-      DB_URL: jdbc:postgresql://envelope-db:5432/${ENVELOPE_DB}
-      PG_USER: ${ENVELOPE_USER}
-      PG_PASSWORD: ${ENVELOPE_PASSWORD}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://envelope-db:5432/${ENVELOPE_DB}
+      SPRING_DATASOURCE_USERNAME: ${ENVELOPE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${ENVELOPE_PASSWORD}
   envelope-db:
     image: postgres:16.4-alpine
     container_name: envelope-db
