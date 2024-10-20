@@ -12,7 +12,7 @@ import java.util.*
 @Entity
 data class Item(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     val id: UUID,
 
     @NotNull
