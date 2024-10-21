@@ -14,7 +14,6 @@ import ru.envelope.api.entities.User
 import ru.envelope.api.services.ItemService
 
 @Tag(name = "items (v1)")
-@SecurityRequirement(name = "default")
 @RestController
 @RequestMapping(path = ["v1/items"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ItemControllerV1(
@@ -31,6 +30,7 @@ class ItemControllerV1(
     }
 
     @PreAuthorize("hasRole('USER')")
+    @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     fun createItem(
