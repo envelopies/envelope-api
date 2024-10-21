@@ -1,6 +1,6 @@
 package ru.envelope.api.mappers
 
-import ru.envelope.api.dto.ItemDto
+import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.entities.Item
 import java.time.format.DateTimeFormatter
 import java.util.function.Function
@@ -10,7 +10,7 @@ object ItemMapper: Function<Item, ItemDto> {
         id = item.id.toString(),
         title = item.title,
         description = item.description,
-        price = item.price.toDouble(),
+        price = item.price,
         createdAt = item.createdAt.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
     )
 }

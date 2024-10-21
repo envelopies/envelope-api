@@ -1,7 +1,7 @@
 package ru.envelope.api.services
 
 import org.springframework.data.domain.Sort
-import ru.envelope.api.dto.ItemDto
+import ru.envelope.api.dto.item.ItemDto
 
 interface ItemService {
     fun getItems(

@@ -3,8 +3,7 @@ package ru.envelope.api.services
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import ru.envelope.api.dto.ItemDto
-import ru.envelope.api.entities.Item
+import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.mappers.ItemMapper
 import ru.envelope.api.repositories.ItemRepository
 
