@@ -1,5 +1,6 @@
 package ru.envelope.api.dto
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
@@ -49,12 +50,14 @@ data class AuthRequestDto(
     /**
      * Данные пользователя, представленные в правильном формате для проверки.
      */
+    @get:JsonIgnore
     val encodingString: ByteArray
         get() = "auth_date=$authDate\nfirst_name=$firstName\nid=$id\nlast_name=$lastName\nusername=$username".toByteArray()
 
     /**
      * Массив байтов для проверки.
      */
+    @get:JsonIgnore
     val hashBytes: ByteArray
         get() = DatatypeConverter.parseHexBinary(hash)
 }
