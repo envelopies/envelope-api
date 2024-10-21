@@ -20,7 +20,6 @@ import ru.envelope.api.services.ItemService
 class ItemControllerV1(
     private val itemService: ItemService
 ) {
-    @PreAuthorize("permitAll()")
     @GetMapping
     fun getItems(
         @RequestParam("pageNumber", required = false, defaultValue = "0") pageNumber: Int,
