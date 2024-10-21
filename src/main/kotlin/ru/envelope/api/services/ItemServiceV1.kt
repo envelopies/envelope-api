@@ -4,8 +4,12 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import ru.envelope.api.dto.item.ItemDto
+import ru.envelope.api.dto.item.ItemPostDto
+import ru.envelope.api.entities.Item
+import ru.envelope.api.entities.User
 import ru.envelope.api.mappers.ItemMapper
 import ru.envelope.api.repositories.ItemRepository
+import java.time.ZonedDateTime
 
 @Service
 class ItemServiceV1(
@@ -16,5 +20,18 @@ class ItemServiceV1(
         return itemRepository.findAll(pageRequest)
             .map(ItemMapper)
             .toList()
+    }
+
+    override fun createItem(itemDto: ItemPostDto, user: User): ItemDto {
+        val item = itemRepository.save(Item(
+            id = null,
+            title = itemDto.title,
+            description = itemDto.description,
+            price = itemDto.price,
+            createdAt = ZonedDateTime.now(),
+            user = user
+        ))
+
+        return ItemMapper.apply(item)
     }
 }
