@@ -32,7 +32,8 @@ class AuthConfig(
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain = httpSecurity
         .authorizeHttpRequests { auth ->
-            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/**", "v1/auth").permitAll()
+            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/**").permitAll()
+                .requestMatchers("v1/auth").permitAll()
                 .anyRequest().authenticated()
         }
         // TODO включить CORS обратно
