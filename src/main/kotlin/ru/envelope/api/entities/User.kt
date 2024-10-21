@@ -35,7 +35,7 @@ data class User(
     /**
      * Список товаров пользователя.
      */
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     val items: Set<Item>,
 ): Principal {
     override fun getName(): String = id.toString()
