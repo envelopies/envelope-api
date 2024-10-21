@@ -8,6 +8,7 @@ import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
 import ru.envelope.api.mappers.ItemMapper
+import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.repositories.ItemRepository
 import java.time.ZonedDateTime
 
@@ -17,8 +18,8 @@ class ItemServiceV1(
 ) : ItemService {
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
         val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
-        return itemRepository.findAll(pageRequest)
-            .map(ItemMapper)
+        return itemRepository.findAllWithProjection(pageRequest)
+            .map(ItemProjectionMapper)
             .toList()
     }
 

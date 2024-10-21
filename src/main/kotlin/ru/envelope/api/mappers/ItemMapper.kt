@@ -13,6 +13,7 @@ object ItemMapper: Function<Item, ItemDto> {
         title = item.title,
         description = item.description,
         price = item.price,
-        createdAt = item.createdAt.format(localDateTimeFormatter)
+        createdAt = item.createdAt.format(localDateTimeFormatter),
+        username = null
     )
 }
