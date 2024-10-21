@@ -7,9 +7,9 @@ import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
-import ru.envelope.api.mappers.ItemMapper
 import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.repositories.ItemRepository
+import ru.envelope.api.util.localDateTimeFormatter
 import java.time.ZonedDateTime
 
 @Service
@@ -33,6 +33,13 @@ class ItemServiceV1(
             user = user
         ))
 
-        return ItemMapper.apply(item)
+        return ItemDto(
+            id = item.id.toString(),
+            title = item.title,
+            description = item.description,
+            price = item.price,
+            createdAt = item.createdAt.format(localDateTimeFormatter),
+            username = user.username
+        )
     }
 }
