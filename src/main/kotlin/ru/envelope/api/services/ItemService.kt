@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.entities.User
+import java.util.*
 
 interface ItemService {
     fun getItems(
@@ -13,8 +14,15 @@ interface ItemService {
         sortOrder: Sort.Direction
     ): List<ItemDto>
 
+    fun getItem(id: UUID): ItemDto?
+
     fun createItem(
         itemDto: ItemPostDto,
         user: User
+    ): ItemDto
+
+    fun updateItem(
+        id: UUID,
+        itemDto: ItemPostDto,
     ): ItemDto
 }

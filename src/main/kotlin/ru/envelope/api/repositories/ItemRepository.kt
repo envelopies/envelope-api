@@ -23,4 +23,17 @@ interface ItemRepository : JpaRepository<Item, UUID> {
           FROM items i
     """, nativeQuery = true)
     fun findAllWithProjection(page: Pageable): Page<ItemProjection>
+
+    @Query("""
+        select i.id as id,
+               i.title as title,
+               i.description as description,
+               i.price as price,
+               i.createdAt as createdAt,
+               u.username as username
+          from Item i
+          join i.user u
+         where i.id = :id
+    """)
+    fun findByIdWithProjection(id: UUID): ItemProjection?
 }

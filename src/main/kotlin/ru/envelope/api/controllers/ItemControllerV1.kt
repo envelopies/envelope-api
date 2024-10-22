@@ -2,16 +2,19 @@ package ru.envelope.api.controllers
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.apache.commons.lang3.NotImplementedException
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
+import ru.envelope.api.dto.item.ItemApplyDto
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.entities.User
 import ru.envelope.api.services.ItemService
+import java.util.UUID
 
 @Tag(name = "items (v1)")
 @RestController
@@ -29,14 +32,42 @@ class ItemControllerV1(
         return itemService.getItems(pageNumber, pageSize, sortField, sortDirection)
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @GetMapping("{id}")
+    fun getItem(
+        @PathVariable("id") id: UUID,
+    ): ItemDto? {
+        return itemService.getItem(id)
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     fun createItem(
         @RequestBody itemDto: ItemPostDto,
-        @AuthenticationPrincipal user: User
+        @AuthenticationPrincipal user: User,
     ): ItemDto {
         return itemService.createItem(itemDto, user)
     }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @SecurityRequirement(name = "default")
+    @PutMapping
+    fun updateItem(
+        @RequestBody itemDto: ItemPostDto,
+        @AuthenticationPrincipal user: User,
+    ): ItemDto {
+        throw NotImplementedException()
+    }
+    
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @SecurityRequirement(name = "default")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("{id}")
+    fun deleteItem(
+        @PathVariable("id") id: UUID,
+    ) {
+        throw NotImplementedException()
+    }
+
 }

@@ -11,6 +11,7 @@ import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.util.localDateTimeFormatter
 import java.time.ZonedDateTime
+import java.util.*
 
 @Service
 class ItemServiceV1(
@@ -21,6 +22,10 @@ class ItemServiceV1(
         return itemRepository.findAllWithProjection(pageRequest)
             .map(ItemProjectionMapper)
             .toList()
+    }
+
+    override fun getItem(id: UUID): ItemDto? {
+        return itemRepository.findByIdWithProjection(id)?.let(ItemProjectionMapper::apply)
     }
 
     override fun createItem(itemDto: ItemPostDto, user: User): ItemDto {
