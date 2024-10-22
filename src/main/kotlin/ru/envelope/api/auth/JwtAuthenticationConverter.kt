@@ -16,7 +16,7 @@ class JwtAuthenticationConverter(
         val authorities = jwt.getClaimAsStringList("roles").map(::SimpleGrantedAuthority)
 
         return object : AbstractAuthenticationToken(authorities) {
-            override fun isAuthenticated() = true
+            override fun isAuthenticated() = user != null
             override fun getCredentials() = user
             override fun getPrincipal() = user
         }
