@@ -34,8 +34,8 @@ class ItemServiceV1(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
-            createdAt = ZonedDateTime.now(),
-            user = user
+            createdAt = null,
+            createdBy = user
         ))
 
         return ItemDto(
