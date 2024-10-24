@@ -33,7 +33,7 @@ interface ItemRepository : JpaRepository<Item, UUID> {
                i.createdAt as createdAt,
                u.username as username
           from Item i
-          join i.user u
+          join i.createdBy u
          where i.id = :id
     """
     )

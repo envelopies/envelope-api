@@ -1,6 +1,7 @@
 package ru.envelope.api.entities
 
 import jakarta.persistence.*
+import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
@@ -18,10 +19,6 @@ class Item(
 
     @Column(nullable = false)
     var price: Int,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
-    var user: User,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -30,4 +27,9 @@ class Item(
     @Column(nullable = false, updatable = false)
     @CreatedDate
     lateinit var createdAt: Instant
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "user_id")
+    @CreatedBy
+    lateinit var createdBy: User
 }

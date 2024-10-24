@@ -11,13 +11,13 @@ class User(
      */
     @Id
     @Column(nullable = false)
-    var id: Long?,
+    var id: Long,
 
     /**
      * Имя пользователя для отображения в карточке.
      */
     @Column(nullable = false)
-    var username: String?,
+    var username: String,
 
     /**
      * Будут верифицированные пользователи.
@@ -25,20 +25,20 @@ class User(
      * Признак пока что ни на что не влияет.
      */
     @Column(nullable = false)
-    var verified: Boolean?,
+    var verified: Boolean,
 
     /**
      * Список ролей пользователя.
      */
     @ElementCollection(fetch = FetchType.EAGER, targetClass = String::class)
     @CollectionTable(name = "authorities", joinColumns = [JoinColumn(name = "user_id")])
-    @Column(name = "authority")
+    @Column(name = "authority", nullable = false)
     var authorities: MutableSet<String> = mutableSetOf(),
 
     /**
      * Список товаров пользователя.
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "createdBy")
     var items: MutableSet<Item> = mutableSetOf(),
 ): Principal {
     override fun getName(): String = id.toString()
