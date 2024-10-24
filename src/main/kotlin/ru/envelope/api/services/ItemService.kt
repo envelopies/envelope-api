@@ -20,9 +20,4 @@ interface ItemService {
         itemDto: ItemPostDto,
         user: User
     ): ItemDto
-
-    fun updateItem(
-        id: UUID,
-        itemDto: ItemPostDto,
-    ): ItemDto
 }

@@ -1,6 +1,6 @@
 package ru.envelope.api.projections
 
-import java.time.ZonedDateTime
+import java.time.Instant
 import java.util.*
 
 interface ItemProjection {
@@ -8,6 +8,6 @@ interface ItemProjection {
     fun getTitle(): String
     fun getDescription(): String
     fun getPrice(): Int
-    fun getCreatedAt(): ZonedDateTime
+    fun getCreatedAt(): Instant
     fun getUsername(): String
 }

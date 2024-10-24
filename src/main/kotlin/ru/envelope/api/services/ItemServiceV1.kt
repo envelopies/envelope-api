@@ -10,7 +10,8 @@ import ru.envelope.api.entities.User
 import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.util.localDateTimeFormatter
-import java.time.ZonedDateTime
+import java.time.Instant
+import java.time.ZoneOffset
 import java.util.*
 
 @Service
@@ -34,7 +35,7 @@ class ItemServiceV1(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
-            createdAt = null,
+            createdAt = Instant.now(),
             createdBy = user
         ))
 
@@ -43,8 +44,8 @@ class ItemServiceV1(
             title = item.title,
             description = item.description,
             price = item.price,
-            createdAt = item.createdAt.format(localDateTimeFormatter),
-            username = user.username
+            createdAt = localDateTimeFormatter.format(item.createdAt),
+            username = user.username,
         )
     }
 }

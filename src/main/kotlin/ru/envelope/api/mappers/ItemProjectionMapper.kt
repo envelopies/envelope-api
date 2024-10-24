@@ -3,6 +3,7 @@ package ru.envelope.api.mappers
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.projections.ItemProjection
 import ru.envelope.api.util.localDateTimeFormatter
+import java.time.ZoneOffset
 import java.util.function.Function
 
 object ItemProjectionMapper: Function<ItemProjection, ItemDto> {
@@ -11,7 +12,7 @@ object ItemProjectionMapper: Function<ItemProjection, ItemDto> {
         title = projection.getTitle(),
         description = projection.getDescription(),
         price = projection.getPrice(),
-        createdAt = projection.getCreatedAt().format(localDateTimeFormatter),
+        createdAt = projection.getCreatedAt().atZone(ZoneOffset.UTC).format(localDateTimeFormatter),
         username = projection.getUsername(),
     )
 }
