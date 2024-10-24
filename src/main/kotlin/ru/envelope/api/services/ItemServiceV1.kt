@@ -9,8 +9,10 @@ import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
 import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.repositories.ItemRepository
+import ru.envelope.api.util.format
 import ru.envelope.api.util.localDateTimeFormatter
 import java.time.Instant
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.util.*
 
@@ -31,12 +33,11 @@ class ItemServiceV1(
 
     override fun createItem(itemDto: ItemPostDto, user: User): ItemDto {
         val item = itemRepository.save(Item(
-            id = null,
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
             createdAt = Instant.now(),
-            createdBy = user
+            user = user
         ))
 
         return ItemDto(
@@ -44,7 +45,7 @@ class ItemServiceV1(
             title = item.title,
             description = item.description,
             price = item.price,
-            createdAt = localDateTimeFormatter.format(item.createdAt),
+            createdAt = item.createdAt.format(),
             username = user.username,
         )
     }

@@ -38,7 +38,7 @@ class User(
     /**
      * Список товаров пользователя.
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "createdBy")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     var items: MutableSet<Item> = mutableSetOf(),
 ): Principal {
     override fun getName(): String = id.toString()

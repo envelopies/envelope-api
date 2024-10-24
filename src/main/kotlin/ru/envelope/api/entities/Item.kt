@@ -7,11 +7,6 @@ import java.util.*
 @Entity
 @Table(name = "items")
 class Item(
-    @Id
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var id: UUID,
-
     @Column(nullable = false)
     var title: String,
 
@@ -25,6 +20,10 @@ class Item(
     var createdAt: Instant,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
-    var createdBy: User,
-)
+    @JoinColumn(nullable = false)
+    var user: User,
+) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    lateinit var id: UUID
+}
