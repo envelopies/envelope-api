@@ -36,7 +36,6 @@ class ItemServiceV1(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
-            createdAt = Instant.now(),
             user = user
         ))
 
