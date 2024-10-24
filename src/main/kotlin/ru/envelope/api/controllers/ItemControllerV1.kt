@@ -6,6 +6,7 @@ import org.apache.commons.lang3.NotImplementedException
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
@@ -34,8 +35,14 @@ class ItemControllerV1(
     @GetMapping("{id}")
     fun getItem(
         @PathVariable("id") id: UUID,
-    ): ItemDto? {
-        return itemService.getItem(id)
+    ): ResponseEntity<ItemDto> {
+        val item = itemService.getItem(id)
+
+        return if (item != null) {
+            ResponseEntity.ok(item)
+        } else {
+            ResponseEntity.noContent().build()
+        }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
