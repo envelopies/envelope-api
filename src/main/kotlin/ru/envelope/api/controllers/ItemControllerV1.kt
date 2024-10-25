@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
+import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.User
 import ru.envelope.api.services.ItemService
 import java.util.*
@@ -57,12 +58,20 @@ class ItemControllerV1(
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @SecurityRequirement(name = "default")
-    @PutMapping
+    @PutMapping("{id}")
     fun updateItem(
-        @RequestBody itemDto: ItemPostDto,
+        @PathVariable("id") id: UUID,
+        @RequestBody itemDto: ItemPutDto,
         @AuthenticationPrincipal user: User,
-    ): String {
-        return "Ok! 123"
+    ): ResponseEntity<ItemDto> {
+        val item = itemService.updateItem(id, itemDto, user)
+
+        return if (item != null) {
+            ResponseEntity.ok(item)
+        } else {
+            // TODO переделать на Bad Request
+            ResponseEntity.noContent().build()
+        }
     }
     
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -72,7 +81,7 @@ class ItemControllerV1(
     fun deleteItem(
         @PathVariable("id") id: UUID,
     ) {
-        return
+        itemService.deleteItem(id)
     }
 
 }

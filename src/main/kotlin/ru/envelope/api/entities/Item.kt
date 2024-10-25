@@ -19,6 +19,12 @@ class Item(
 
     @Column(nullable = false)
     var price: Int,
+
+    @Column(nullable = false)
+    var published: Boolean = false,
+
+    @Column(nullable = false)
+    var removed: Boolean = false
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

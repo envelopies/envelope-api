@@ -3,6 +3,7 @@ package ru.envelope.api.services
 import org.springframework.data.domain.Sort
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
+import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.User
 import java.util.*
 
@@ -20,4 +21,12 @@ interface ItemService {
         itemDto: ItemPostDto,
         user: User
     ): ItemDto
+
+    fun updateItem(
+        id: UUID,
+        itemDto: ItemPutDto,
+        user: User
+    ): ItemDto?
+
+    fun deleteItem(id: UUID)
 }
