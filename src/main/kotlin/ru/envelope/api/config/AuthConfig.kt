@@ -11,12 +11,14 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
+import org.springframework.data.domain.AuditorAware
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.oauth2.jwt.*
 import org.springframework.security.web.SecurityFilterChain
+import ru.envelope.api.entities.User
 import javax.crypto.spec.SecretKeySpec
 
 @Configuration
@@ -34,7 +36,7 @@ class AuthConfig(
         .authorizeHttpRequests { auth ->
             auth.requestMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/**").permitAll()
                 .requestMatchers("v1/auth").permitAll()
-                .requestMatchers("v1/items").permitAll()
+                .requestMatchers("v1/items", "v1/items/{id}").permitAll()
                 .anyRequest().authenticated()
         }
         // TODO включить CORS обратно
@@ -65,5 +67,10 @@ class AuthConfig(
 
         val jwkSource: JWKSource<SecurityContext> = ImmutableJWKSet(JWKSet(jwk))
         return NimbusJwtEncoder(jwkSource)
+    }
+
+    @Bean
+    fun auditorProvider(): AuditorAware<User> {
+        return AuditorAwareImpl()
     }
 }

@@ -2,7 +2,6 @@ package ru.envelope.api.controllers
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.apache.commons.lang3.NotImplementedException
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -62,8 +61,8 @@ class ItemControllerV1(
     fun updateItem(
         @RequestBody itemDto: ItemPostDto,
         @AuthenticationPrincipal user: User,
-    ): ItemDto {
-        throw NotImplementedException()
+    ): String {
+        return "Ok! 123"
     }
     
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -73,7 +72,7 @@ class ItemControllerV1(
     fun deleteItem(
         @PathVariable("id") id: UUID,
     ) {
-        throw NotImplementedException()
+        return
     }
 
 }
