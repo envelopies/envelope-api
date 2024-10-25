@@ -21,12 +21,6 @@ data class AuthRequestDto(
     val id: Long,
 
     /**
-     * Имя пользователя в телеграмме.
-     */
-    @Schema(description = "имя пользователя; может быть пустым значением (см. профиль телеграмм)")
-    val username: String,
-
-    /**
      * First Name пользователя.
      */
     @Schema(description = "First Name пользователя; никогда не бывает пустым (см. профиль телеграмм)")
@@ -34,10 +28,22 @@ data class AuthRequestDto(
     val firstName: String,
 
     /**
+     * Имя пользователя в телеграмме.
+     */
+    @Schema(description = "имя пользователя; может быть пустым значением (см. профиль телеграмм)")
+    val username: String?,
+
+    /**
      * Last Name пользователя.
      */
     @Schema(description = "Last Name пользователя; может быть пустым (см. профиль телеграмм)")
     val lastName: String?,
+
+    /**
+     * Изображение профиля.
+     */
+    @Schema(description = "ссылка на изображение профиля; может быть пустым (см. профиль телеграмм)")
+    val photoUrl: String?,
 
     /**
      * Хэш этих данных.
@@ -52,7 +58,13 @@ data class AuthRequestDto(
      */
     @get:JsonIgnore
     val encodingString: ByteArray
-        get() = "auth_date=$authDate\nfirst_name=$firstName\nid=$id\nlast_name=$lastName\nusername=$username".toByteArray()
+        get() {
+            var result = "auth_date=$authDate\nfirst_name=$firstName\nid=$id"
+            if (lastName != null) result += "\nlast_name=$lastName"
+            if (photoUrl != null) result += "\nphoto_url=$photoUrl"
+            if (username != null) result += "\nusername=$username"
+            return result.toByteArray()
+        }
 
     /**
      * Массив байтов для проверки.
