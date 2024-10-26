@@ -52,6 +52,6 @@ jobs:
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           port: ${{ secrets.DEPLOY_PORT }}
-          username: ${{ secrets.DEPLOY_USER_NAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.DEPLOY_USERNAME }}
+          key: ${{ secrets.DEPLOY_PRIVATE_KEY }}
           script: ./update-api.sh
