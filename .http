@@ -17,4 +17,35 @@ Content-Type: application/json
 
 ###
 GET http://localhost:8080/api/v1/items
+
+###
+GET http://localhost:8080/api/v1/items/{{item_id}}
+
+###
+POST http://localhost:8080/api/v1/items
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "title": "Тестовое название",
+  "description": "Тестовое описание\n{{$random.uuid}}",
+  "price": 900
+}
+
+> {%
+    client.global.set("item_id", response.body["id"])
+ %}
+
+###
+PUT http://localhost:8080/api/v1/items/{{item_id}}
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "title": "Новое название",
+  "published": true
+}
+
+###
+DELETE http://localhost:8080/api/v1/items/{{item_id}}
 Authorization: Bearer {{access_token}}

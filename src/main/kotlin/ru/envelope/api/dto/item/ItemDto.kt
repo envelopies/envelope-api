@@ -17,4 +17,7 @@ data class ItemDto(
 
     @Schema(description = "дата и время публикации", format = "yyyy-MM-dd'T'HH:mm:ss")
     val createdAt: String,
+
+    @Schema(description = "имя пользователя, создавшего товар")
+    val username: String?
 )

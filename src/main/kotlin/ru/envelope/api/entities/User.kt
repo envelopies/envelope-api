@@ -5,24 +5,27 @@ import java.security.Principal
 
 @Entity
 @Table(name = "users")
-data class User(
+class User(
     /**
      * ID пользователя в телеграмме.
      */
     @Id
-    val id: Long,
+    @Column(nullable = false)
+    var id: Long,
 
     /**
      * Имя пользователя для отображения в карточке.
      */
-    val username: String?,
+    @Column(nullable = false)
+    var username: String,
 
     /**
      * Будут верифицированные пользователи.
      * Возможно с галочкой?
      * Признак пока что ни на что не влияет.
      */
-    val verified: Boolean,
+    @Column(nullable = false)
+    var verified: Boolean,
 
     /**
      * Список ролей пользователя.
@@ -30,13 +33,13 @@ data class User(
     @ElementCollection(fetch = FetchType.EAGER, targetClass = String::class)
     @CollectionTable(name = "authorities", joinColumns = [JoinColumn(name = "user_id")])
     @Column(name = "authority", nullable = false)
-    val authorities: Set<String> = HashSet(),
+    var authorities: MutableSet<String> = mutableSetOf(),
 
     /**
      * Список товаров пользователя.
      */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    val items: Set<Item>,
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "createdBy")
+    var items: MutableSet<Item> = mutableSetOf(),
 ): Principal {
     override fun getName(): String = id.toString()
 }

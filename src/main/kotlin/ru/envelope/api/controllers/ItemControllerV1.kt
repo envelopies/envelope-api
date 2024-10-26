@@ -5,13 +5,16 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Sort
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.dto.item.ItemPostDto
+import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.User
 import ru.envelope.api.services.ItemService
+import java.util.*
 
 @Tag(name = "items (v1)")
 @RestController
@@ -29,14 +32,56 @@ class ItemControllerV1(
         return itemService.getItems(pageNumber, pageSize, sortField, sortDirection)
     }
 
-    @PreAuthorize("hasRole('USER')")
+    @GetMapping("{id}")
+    fun getItem(
+        @PathVariable("id") id: UUID,
+    ): ResponseEntity<ItemDto> {
+        val item = itemService.getItem(id)
+
+        return if (item != null) {
+            ResponseEntity.ok(item)
+        } else {
+            ResponseEntity.noContent().build()
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('USER')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     fun createItem(
         @RequestBody itemDto: ItemPostDto,
-        @AuthenticationPrincipal user: User
+        @AuthenticationPrincipal user: User,
     ): ItemDto {
         return itemService.createItem(itemDto, user)
     }
+
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @SecurityRequirement(name = "default")
+    @PutMapping("{id}")
+    fun updateItem(
+        @PathVariable("id") id: UUID,
+        @RequestBody itemDto: ItemPutDto,
+        @AuthenticationPrincipal user: User,
+    ): ResponseEntity<ItemDto> {
+        val item = itemService.updateItem(id, itemDto, user)
+
+        return if (item != null) {
+            ResponseEntity.ok(item)
+        } else {
+            // TODO переделать на Bad Request
+            ResponseEntity.noContent().build()
+        }
+    }
+    
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @SecurityRequirement(name = "default")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("{id}")
+    fun deleteItem(
+        @PathVariable("id") id: UUID,
+    ) {
+        itemService.deleteItem(id)
+    }
+
 }

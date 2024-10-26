@@ -1,32 +1,41 @@
 package ru.envelope.api.entities
 
 import jakarta.persistence.*
-import jakarta.validation.constraints.NotBlank
-import jakarta.validation.constraints.NotNull
-import java.time.ZonedDateTime
+import org.springframework.data.annotation.CreatedBy
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.Instant
 import java.util.*
 
 @Entity
+@EntityListeners(AuditingEntityListener::class)
 @Table(name = "items")
-data class Item(
+class Item(
+    @Column(nullable = false)
+    var title: String,
+
+    @Column(nullable = false)
+    var description: String,
+
+    @Column(nullable = false)
+    var price: Int,
+
+    @Column(nullable = false)
+    var published: Boolean = false,
+
+    @Column(nullable = false)
+    var removed: Boolean = false
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    val id: UUID?,
+    lateinit var id: UUID
 
-    @NotNull
-    @NotBlank
-    val title: String,
+    @Column(nullable = false, updatable = false)
+    @CreatedDate
+    lateinit var createdAt: Instant
 
-    @NotNull
-    val description: String,
-
-    @NotNull
-    val price: Int,
-
-    @NotNull
-    val createdAt: ZonedDateTime,
-
-    @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    val user: User,
-)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "user_id")
+    @CreatedBy
+    lateinit var createdBy: User
+}
