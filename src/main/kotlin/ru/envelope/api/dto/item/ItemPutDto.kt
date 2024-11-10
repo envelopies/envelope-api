@@ -1,6 +1,7 @@
 package ru.envelope.api.dto.item
 
 import io.swagger.v3.oas.annotations.media.Schema
+import java.util.UUID
 
 data class ItemPutDto(
     @Schema(description = "название товара")
@@ -16,5 +17,8 @@ data class ItemPutDto(
     val published: Boolean?,
 
     @Schema(description = "удалён ли товар с сайта")
-    val removed: Boolean?
+    val removed: Boolean?,
+
+    @Schema(description = "идентифкатор категории, к которой относится товар")
+    val categoryId: UUID?
 )

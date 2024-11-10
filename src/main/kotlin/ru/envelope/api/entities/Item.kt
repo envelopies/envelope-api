@@ -24,7 +24,11 @@ class Item(
     var published: Boolean = false,
 
     @Column(nullable = false)
-    var removed: Boolean = false
+    var removed: Boolean = false,
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+    val category: Category,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -29,7 +29,8 @@ Content-Type: application/json
 {
   "title": "Тестовое название",
   "description": "Тестовое описание\n{{$random.uuid}}",
-  "price": 900
+  "price": 900,
+  "categoryId": "a408461a-5eed-4913-b133-0e62f28ce726"
 }
 
 > {%

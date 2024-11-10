@@ -26,7 +26,7 @@ interface ItemService {
         id: UUID,
         itemDto: ItemPutDto,
         user: User
-    ): ItemDto?
+    ): ItemDto
 
     fun deleteItem(id: UUID)
 }

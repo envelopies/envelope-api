@@ -19,5 +19,8 @@ data class ItemDto(
     val createdAt: String,
 
     @Schema(description = "имя пользователя, создавшего товар")
-    val username: String?
+    val username: String?,
+
+    @Schema(description = "категория, к которой относится товар")
+    val category: String?,
 )

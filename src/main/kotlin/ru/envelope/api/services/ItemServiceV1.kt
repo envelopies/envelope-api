@@ -8,19 +8,17 @@ import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
+import ru.envelope.api.exceptions.CategoryNotFoundException
+import ru.envelope.api.exceptions.ItemNotFoundException
 import ru.envelope.api.mappers.ItemProjectionMapper
+import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
-import ru.envelope.api.util.format
-import ru.envelope.api.util.localDateTimeFormatter
-import java.time.Instant
-import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.*
-import kotlin.NoSuchElementException
 
 @Service
 class ItemServiceV1(
-    private val itemRepository: ItemRepository
+    private val itemRepository: ItemRepository,
+    private val categoryRepository: CategoryRepository
 ) : ItemService {
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
         val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
@@ -34,27 +32,27 @@ class ItemServiceV1(
     }
 
     override fun createItem(itemDto: ItemPostDto, user: User): ItemDto {
+        val category = categoryRepository.findById(itemDto.categoryId)
+
+        if (category.isEmpty) {
+            throw CategoryNotFoundException(itemDto.categoryId)
+        }
+
         val item = itemRepository.save(Item(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
+            category = category.get()
         ))
 
-        return ItemDto(
-            id = item.id.toString(),
-            title = item.title,
-            description = item.description,
-            price = item.price,
-            createdAt = item.createdAt.format(),
-            username = user.username,
-        )
+        return getItem(item.id)!!
     }
 
-    override fun updateItem(id: UUID, itemDto: ItemPutDto, user: User): ItemDto? {
+    override fun updateItem(id: UUID, itemDto: ItemPutDto, user: User): ItemDto {
         val itemEntity = itemRepository.findById(id)
 
         if (itemEntity.isEmpty) {
-            return null
+            throw ItemNotFoundException(id)
         }
 
         val item = itemEntity.get()
@@ -77,14 +75,7 @@ class ItemServiceV1(
         }
         itemRepository.save(item)
 
-        return ItemDto(
-            id = item.id.toString(),
-            title = item.title,
-            description = item.description,
-            price = item.price,
-            createdAt = item.createdAt.format(),
-            username = user.username,
-        )
+        return getItem(item.id)!!
     }
 
     override fun deleteItem(id: UUID) {

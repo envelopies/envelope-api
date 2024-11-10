@@ -7,74 +7,69 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
-import ru.envelope.api.dto.item.ItemDto
-import ru.envelope.api.dto.item.ItemPostDto
-import ru.envelope.api.dto.item.ItemPutDto
-import ru.envelope.api.entities.User
-import ru.envelope.api.services.ItemService
-import java.util.*
+import ru.envelope.api.dto.category.CategoryDto
+import ru.envelope.api.dto.category.CategoryPostDto
+import ru.envelope.api.dto.category.CategoryPutDto
+import ru.envelope.api.services.CategoryService
+import java.util.UUID
 
 @Tag(name = "items (v1)")
 @RestController
-@RequestMapping(path = ["v1/items"], produces = [MediaType.APPLICATION_JSON_VALUE])
-class ItemControllerV1(
-    private val itemService: ItemService
+@RequestMapping(value = ["v1/categories"], produces = [MediaType.APPLICATION_JSON_VALUE])
+class CategoryControllerV1(
+    private val categoryService: CategoryService
 ) {
     @GetMapping
-    fun getItems(
+    fun getCategories(
         @RequestParam("pageNumber", required = false, defaultValue = "0") pageNumber: Int,
         @RequestParam("pageSize", required = false, defaultValue = "10") pageSize: Int,
         @RequestParam("sortField", required = false, defaultValue = "createdAt") sortField: String,
         @RequestParam("sortDirection", required = false, defaultValue = "DESC") sortDirection: Sort.Direction,
-    ): List<ItemDto> {
-        return itemService.getItems(pageNumber, pageSize, sortField, sortDirection)
+    ): List<CategoryDto> {
+        return categoryService.getCategories(pageNumber, pageSize, sortField, sortDirection)
     }
 
     @GetMapping("{id}")
     fun getItem(
-        @PathVariable("id") id: UUID,
-    ): ResponseEntity<ItemDto> {
-        val item = itemService.getItem(id)
+        @PathVariable("id") id: UUID
+    ): ResponseEntity<CategoryDto> {
+        val itemCategory = categoryService.getCategory(id)
 
-        return if (item != null) {
-            ResponseEntity.ok(item)
+        return if (itemCategory != null) {
+            ResponseEntity.ok(itemCategory)
         } else {
             ResponseEntity.noContent().build()
         }
     }
 
-    @PreAuthorize("hasAnyRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    fun createItem(
-        @RequestBody itemDto: ItemPostDto,
-        @AuthenticationPrincipal user: User,
-    ): ItemDto {
-        return itemService.createItem(itemDto, user)
+    fun createItemCategory(
+        @RequestBody categoryDto: CategoryPostDto
+    ): CategoryDto {
+        return categoryService.createCategory(categoryDto)
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @SecurityRequirement(name = "default")
     @PutMapping("{id}")
-    fun updateItem(
+    fun updateItemCategory(
         @PathVariable("id") id: UUID,
-        @RequestBody itemDto: ItemPutDto,
-        @AuthenticationPrincipal user: User,
-    ): ItemDto {
-        return itemService.updateItem(id, itemDto, user)
+        @RequestBody categoryDto: CategoryPutDto
+    ): CategoryDto {
+        return categoryService.updateCategory(id, categoryDto)
     }
-    
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("{id}")
-    fun deleteItem(
-        @PathVariable("id") id: UUID,
+    fun deleteItemCategory(
+        @PathVariable("id") id: UUID
     ) {
-        itemService.deleteItem(id)
+        categoryService.deleteCategory(id)
     }
-
 }
