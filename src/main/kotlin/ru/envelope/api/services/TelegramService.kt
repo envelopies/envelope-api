@@ -15,7 +15,7 @@ class TelegramService(
 ) {
     fun checkTelegramAuthData(telegramAuthData: AuthRequestDto): Boolean {
         val now = Instant.now().epochSecond
-        if ((now - telegramAuthData.authDate) > 86400) {
+        if ((now - telegramAuthData.authDate) > MAX_TOKEN_LIFETIME_SEC) {
             return false
         }
 
@@ -26,5 +26,9 @@ class TelegramService(
         mac.init(encodedKey)
         val computedHash = mac.doFinal(telegramAuthData.encodingString)
         return computedHash.contentEquals(telegramAuthData.hashBytes)
+    }
+
+    companion object {
+        const val MAX_TOKEN_LIFETIME_SEC = 86400L
     }
 }

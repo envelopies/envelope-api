@@ -15,7 +15,7 @@ class JwtTokenService(
 ) {
     fun generateToken(user: User): String {
         val now = Instant.now()
-        val expiry = 3600L
+        val expiry = TelegramService.MAX_TOKEN_LIFETIME_SEC
 
         val header = JwsHeader.with(MacAlgorithm.HS256).build()
 
