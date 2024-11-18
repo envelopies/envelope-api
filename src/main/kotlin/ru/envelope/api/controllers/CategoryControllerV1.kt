@@ -24,8 +24,8 @@ class CategoryControllerV1(
     fun getCategories(
         @RequestParam("pageNumber", required = false, defaultValue = "0") pageNumber: Int,
         @RequestParam("pageSize", required = false, defaultValue = "10") pageSize: Int,
-        @RequestParam("sortField", required = false, defaultValue = "createdAt") sortField: String,
-        @RequestParam("sortDirection", required = false, defaultValue = "DESC") sortDirection: Sort.Direction,
+        @RequestParam("sortField", required = false, defaultValue = "title") sortField: String,
+        @RequestParam("sortDirection", required = false, defaultValue = "ASC") sortDirection: Sort.Direction,
     ): List<CategoryDto> {
         return categoryService.getCategories(pageNumber, pageSize, sortField, sortDirection)
     }
