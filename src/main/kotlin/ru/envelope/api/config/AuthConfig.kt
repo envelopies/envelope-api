@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.core.convert.converter.Converter
 import org.springframework.data.domain.AuditorAware
 import org.springframework.security.authentication.AbstractAuthenticationToken
+import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -40,10 +41,7 @@ class AuthConfig(
                 .requestMatchers("v1/categories", "v1/categories/{id}", "v1/categories/tree").permitAll()
                 .anyRequest().authenticated()
         }
-        // TODO включить CORS обратно
-        .cors { cors ->
-            cors.disable()
-        }
+        .cors(Customizer.withDefaults())
         // TODO включить CSRF обратно
         .csrf { csrf ->
             csrf.disable()
