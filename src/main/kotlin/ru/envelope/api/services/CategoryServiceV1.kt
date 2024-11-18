@@ -1,14 +1,17 @@
 package ru.envelope.api.services
 
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
+import ru.envelope.api.dto.category.CategoryTreeNodeDto
 import ru.envelope.api.entities.Category
 import ru.envelope.api.exceptions.CategoryNotFoundException
 import ru.envelope.api.mappers.CategoryProjectionMapper
+import ru.envelope.api.projections.CategoryProjection
 import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
 import java.util.*
@@ -23,6 +26,26 @@ class CategoryServiceV1(
         return categoryRepository.findAllWithProjection(pageRequest)
             .map(CategoryProjectionMapper)
             .toList()
+    }
+
+    override fun getCategoriesTree(): List<CategoryTreeNodeDto> {
+        val sortRequest = Pageable.unpaged(Sort.by(Sort.Direction.ASC, "parentCategoryId"))
+        val categoryProjections = categoryRepository.findAllWithProjection(sortRequest)
+        return categoryProjections.filter {
+            it.getParentCategoryId() == null
+        }.map {
+            fillChildren(it, categoryProjections)
+        }.toList()
+    }
+
+    private fun fillChildren(parent: CategoryProjection, allItems: Iterable<CategoryProjection>): CategoryTreeNodeDto {
+        val nodeDto = CategoryTreeNodeDto.fromProjection(parent)
+        nodeDto.children = allItems.filter {
+            it.getParentCategoryId() == parent.getId()
+        }.map {
+            fillChildren(it, allItems)
+        }.toList()
+        return nodeDto
     }
 
     override fun getCategory(id: UUID): CategoryDto? {

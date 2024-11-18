@@ -4,6 +4,7 @@ import org.springframework.data.domain.Sort
 import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
+import ru.envelope.api.dto.category.CategoryTreeNodeDto
 import java.util.UUID
 
 interface CategoryService {
@@ -13,6 +14,8 @@ interface CategoryService {
         sortField: String,
         sortOrder: Sort.Direction
     ): List<CategoryDto>
+
+    fun getCategoriesTree(): List<CategoryTreeNodeDto>
 
     fun getCategory(id: UUID): CategoryDto?
 

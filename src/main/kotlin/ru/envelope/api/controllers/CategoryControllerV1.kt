@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*
 import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
+import ru.envelope.api.dto.category.CategoryTreeNodeDto
 import ru.envelope.api.services.CategoryService
 import java.util.UUID
 
@@ -28,6 +29,11 @@ class CategoryControllerV1(
         @RequestParam("sortDirection", required = false, defaultValue = "ASC") sortDirection: Sort.Direction,
     ): List<CategoryDto> {
         return categoryService.getCategories(pageNumber, pageSize, sortField, sortDirection)
+    }
+
+    @GetMapping("tree")
+    fun getCategoriesTree(): List<CategoryTreeNodeDto> {
+        return categoryService.getCategoriesTree()
     }
 
     @GetMapping("{id}")
