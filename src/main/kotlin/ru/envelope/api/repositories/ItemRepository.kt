@@ -23,7 +23,7 @@ interface ItemRepository : JpaRepository<Item, UUID> {
           JOIN categories c ON i.category_id = c.id
     """, countQuery = """
         SELECT COUNT(*)
-          FROM items i
+          FROM items
     """, nativeQuery = true)
     fun findAllWithProjection(page: Pageable): Page<ItemProjection>
 
