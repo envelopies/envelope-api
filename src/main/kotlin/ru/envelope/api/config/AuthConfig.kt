@@ -36,7 +36,7 @@ class AuthConfig(
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain = httpSecurity
         .authorizeHttpRequests { auth ->
             auth.requestMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/**").permitAll()
-                .requestMatchers("v1/auth").permitAll()
+                .requestMatchers("v1/auth", "v1/auth/register").permitAll()
                 .requestMatchers("v1/items", "v1/items/{id}").permitAll()
                 .requestMatchers("v1/categories", "v1/categories/{id}", "v1/categories/tree").permitAll()
                 .anyRequest().authenticated()
