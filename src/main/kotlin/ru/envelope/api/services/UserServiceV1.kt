@@ -25,4 +25,12 @@ class UserServiceV1(
             .map(UsersProjectionMapper::apply)
             .toList()
     }
+
+    override fun createUser(id: Long, firstName: String, lastName: String?, username: String?): User {
+        return userRepository.save(User(
+            id = id,
+            fullName = firstName + if (lastName != null) " $lastName" else "",
+            username = username,
+            verified = false))
+    }
 }

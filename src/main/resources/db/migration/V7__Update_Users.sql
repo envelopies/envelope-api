@@ -1,0 +1,8 @@
+ALTER TABLE users
+    ADD full_name VARCHAR(255);
+
+ALTER TABLE users
+    ALTER COLUMN full_name SET NOT NULL;
+
+ALTER TABLE users
+    ALTER COLUMN username DROP NOT NULL;

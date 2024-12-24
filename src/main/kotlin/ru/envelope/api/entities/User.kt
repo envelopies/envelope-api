@@ -14,10 +14,16 @@ class User(
     var id: Long,
 
     /**
-     * Имя пользователя для отображения в карточке.
+     * Отображаемое имя пользователя для карточки.
      */
     @Column(nullable = false)
-    var username: String,
+    var fullName: String,
+
+    /**
+     * Имя пользователя для отображения в карточке.
+     */
+    @Column(nullable = true)
+    var username: String?,
 
     /**
      * Будут верифицированные пользователи.

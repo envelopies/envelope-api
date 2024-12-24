@@ -19,4 +19,11 @@ interface UserService {
         sortField: String,
         sortOrder: Sort.Direction
     ): List<UserDto>
+
+    fun createUser(
+        id: Long,
+        firstName: String,
+        lastName: String? = null,
+        username: String? = null
+    ): User
 }

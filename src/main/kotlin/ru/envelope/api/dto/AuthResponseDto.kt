@@ -4,5 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 
 data class AuthResponseDto(
     @Schema(description = "JWT этого сервиса")
-    val token: String
+    val token: String?,
+
+    @Schema(description = "успешный ли вход")
+    val success: Boolean
 )

@@ -1,5 +1,6 @@
 package ru.envelope.api.dto
 
+import com.fasterxml.jackson.annotation.JsonAlias
 import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.NotBlank
@@ -12,6 +13,7 @@ data class AuthRequestDto(
      * Является Unix Timestamp.
      */
     @Schema(description = "время логина в телеграмм; мс")
+    @JsonAlias("auth_date")
     val authDate: Long,
 
     /**
@@ -25,6 +27,7 @@ data class AuthRequestDto(
      */
     @Schema(description = "First Name пользователя; никогда не бывает пустым (см. профиль телеграмм)")
     @NotBlank(message = "First Name должен быть заполнен")
+    @JsonAlias("first_name")
     val firstName: String,
 
     /**
@@ -37,12 +40,14 @@ data class AuthRequestDto(
      * Last Name пользователя.
      */
     @Schema(description = "Last Name пользователя; может быть пустым (см. профиль телеграмм)")
+    @JsonAlias("last_name")
     val lastName: String?,
 
     /**
      * Изображение профиля.
      */
     @Schema(description = "ссылка на изображение профиля; может быть пустым (см. профиль телеграмм)")
+    @JsonAlias("photo_url")
     val photoUrl: String?,
 
     /**

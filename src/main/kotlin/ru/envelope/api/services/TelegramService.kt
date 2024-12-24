@@ -3,6 +3,7 @@ package ru.envelope.api.services
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import ru.envelope.api.dto.AuthRequestDto
+import ru.envelope.api.models.TelegramDataStatus
 import java.security.MessageDigest
 import java.time.Instant
 import javax.crypto.Mac
@@ -13,10 +14,10 @@ class TelegramService(
     @Value("\${telegram.secret}")
     val botSecret: String
 ) {
-    fun checkTelegramAuthData(telegramAuthData: AuthRequestDto): Boolean {
+    fun checkTelegramAuthData(telegramAuthData: AuthRequestDto): TelegramDataStatus {
         val now = Instant.now().epochSecond
         if ((now - telegramAuthData.authDate) > MAX_TOKEN_LIFETIME_SEC) {
-            return false
+            return TelegramDataStatus.EXPIRED
         }
 
         val digest = MessageDigest.getInstance("SHA-256")
@@ -25,7 +26,11 @@ class TelegramService(
         val mac = Mac.getInstance("HmacSHA256")
         mac.init(encodedKey)
         val computedHash = mac.doFinal(telegramAuthData.encodingString)
-        return computedHash.contentEquals(telegramAuthData.hashBytes)
+        return if (computedHash.contentEquals(telegramAuthData.hashBytes)) {
+            TelegramDataStatus.GOOD
+        } else {
+            TelegramDataStatus.BAD
+        }
     }
 
     companion object {
