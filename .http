@@ -58,3 +58,46 @@ Authorization: Bearer {{access_token}}
 
 ### Получить список категорий в виде дерева
 GET http://localhost:8080/api/v1/categories/tree
+
+### Получение списка мест доставки
+GET http://localhost:8080/api/v1/locations
+
+### Получение конкретного места доставки
+GET http://localhost:8080/api/v1/locations/{{location_id}}
+
+### Создание нового места доставки
+POST http://localhost:8080/api/v1/locations
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "title": "НВК 2",
+  "latitude": 56.771573,
+  "longitude": 60.762416
+}
+
+> {%
+    client.global.set("location_id", response.body["id"])
+%}
+
+### Изменение места доставки
+PUT http://localhost:8080/api/v1/locations/{{location_id}}
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "title": "НВК 2"
+}
+
+### Ошибочное изменение места доставки
+PUT http://localhost:8080/api/v1/locations/{{$random.uuid}}
+Authorization: Bearer {{access_token}}
+Content-Type: application/json
+
+{
+  "title": "НВК 2"
+}
+
+### Удаление места доставки
+DELETE http://localhost:8080/api/v1/locations/{{location_id}}
+Authorization: Bearer {{access_token}}

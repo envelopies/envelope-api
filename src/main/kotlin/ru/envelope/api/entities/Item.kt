@@ -28,7 +28,10 @@ class Item(
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    val category: Category,
+    var category: Category,
+
+    @ManyToMany(targetEntity = Location::class)
+    var deliveryAddresses: Set<Location> = mutableSetOf()
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
