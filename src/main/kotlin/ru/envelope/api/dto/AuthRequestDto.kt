@@ -55,7 +55,7 @@ data class AuthRequestDto(
      */
     @Schema(description = "хэш данных, проверяет в правильном ли боте был залогинен")
     @NotBlank(message = "хэш данных должен быть заполнен, иначе невозможно проверить запрос от того ли бота")
-    @Size(min = 64, max = 64, message = "хэш является размером 64")
+    @Size(min = 64, max = 64, message = "хэш размером 64 символа")
     val hash: String,
 ) {
     /**

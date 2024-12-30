@@ -1,5 +1,6 @@
 package ru.envelope.api.controllers
 
+import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Sort
@@ -16,12 +17,13 @@ import ru.envelope.api.entities.User
 import ru.envelope.api.services.ItemService
 import java.util.*
 
-@Tag(name = "items (v1)")
+@Tag(name = "items (v1)", description = "работа с товарами")
 @RestController
 @RequestMapping(path = ["v1/items"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ItemControllerV1(
     private val itemService: ItemService
 ) {
+    @Operation(summary = "получение всего списка товаров")
     @GetMapping
     fun getItems(
         @RequestParam("pageNumber", required = false, defaultValue = "0") pageNumber: Int,
@@ -32,6 +34,7 @@ class ItemControllerV1(
         return itemService.getItems(pageNumber, pageSize, sortField, sortDirection)
     }
 
+    @Operation(summary = "получение информации о конкретном товаре")
     @GetMapping("{id}")
     fun getItem(
         @PathVariable("id") id: UUID,
@@ -45,6 +48,7 @@ class ItemControllerV1(
         }
     }
 
+    @Operation(summary = "создание нового товара", description = "доступно только пользователю, нельзя админу")
     @PreAuthorize("hasAnyRole('USER')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.CREATED)
@@ -56,6 +60,7 @@ class ItemControllerV1(
         return itemService.createItem(itemDto, user)
     }
 
+    @Operation(summary = "изменение товара", description = "изменение товара, в том числе подтверждение")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @SecurityRequirement(name = "default")
     @PutMapping("{id}")
@@ -66,7 +71,8 @@ class ItemControllerV1(
     ): ItemDto {
         return itemService.updateItem(id, itemDto, user)
     }
-    
+
+    @Operation(summary = "удаление товара")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
     @SecurityRequirement(name = "default")
     @ResponseStatus(HttpStatus.NO_CONTENT)
