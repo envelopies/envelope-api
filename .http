@@ -15,13 +15,18 @@ Content-Type: application/json
     client.global.set("access_token", response.body['token'])
  %}
 
-###
+### Получить список товаров
 GET http://localhost:8080/api/v1/items
 
-###
+### Проверка CORS
+OPTIONS http://localhost:8080/api/v1/items
+Access-Control-Request-Method: GET
+Origin: http://localhost:4200
+
+### Получить полную информацию о товаре
 GET http://localhost:8080/api/v1/items/{{item_id}}
 
-###
+### Создать новый товар
 POST http://localhost:8080/api/v1/items
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
@@ -37,7 +42,7 @@ Content-Type: application/json
     client.global.set("item_id", response.body["id"])
  %}
 
-###
+### Изменить товар
 PUT http://localhost:8080/api/v1/items/{{item_id}}
 Authorization: Bearer {{access_token}}
 Content-Type: application/json
@@ -47,14 +52,9 @@ Content-Type: application/json
   "published": true
 }
 
-###
+### Удалить товар
 DELETE http://localhost:8080/api/v1/items/{{item_id}}
 Authorization: Bearer {{access_token}}
 
-###
+### Получить список категорий в виде дерева
 GET http://localhost:8080/api/v1/categories/tree
-
-### Проверка CORS
-OPTIONS http://localhost:8080/api/v1/items
-Access-Control-Request-Method: GET
-Origin: http://localhost:4200
