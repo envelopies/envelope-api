@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration
 class OpenApiConfig {
     @Bean
     fun createOpenAPI(): OpenAPI = OpenAPI()
-        .servers(listOf(Server().url("http://localhost:8080/api"), Server().url("https://nvk1.store/api"))
+        .servers(listOf(Server().url("http://localhost:8080/api"), Server().url("https://nvk1.store/api")))
         .components(Components()
             .addSecuritySchemes("default", SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
 }
