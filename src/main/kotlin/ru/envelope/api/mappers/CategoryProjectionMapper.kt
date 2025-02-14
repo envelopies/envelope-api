@@ -8,6 +8,7 @@ object CategoryProjectionMapper: Function<CategoryProjection, CategoryDto> {
     override fun apply(projection: CategoryProjection): CategoryDto = CategoryDto(
         id = projection.getId().toString(),
         title = projection.getTitle(),
+        iconUrl = projection.getIconUrl(),
         parentCategoryId = projection.getParentCategoryId()?.toString(),
     )
 }

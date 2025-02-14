@@ -12,6 +12,7 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
     @Query(value = """
         SELECT c.id AS id,
                c.title AS title,
+               c.iconUrl AS iconUrl,
                c.parent_category_id AS parentCategoryId
           FROM categories c
     """, countQuery = """
@@ -24,6 +25,7 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
         """
         select c.id as id,
                c.title as title,
+               c.iconUrl as iconUrl,
                c.parentCategory.id as parentCategoryId
           from Category c
          where c.id = :id

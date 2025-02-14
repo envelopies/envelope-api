@@ -66,6 +66,7 @@ class CategoryServiceV1(
 
         val category = categoryRepository.save(Category(
             title = categoryDto.title,
+            iconUrl = categoryDto.iconUrl,
             parentCategory = parentCategory
         ))
 

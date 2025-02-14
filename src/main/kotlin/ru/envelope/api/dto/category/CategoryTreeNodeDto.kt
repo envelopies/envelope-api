@@ -9,6 +9,9 @@ data class CategoryTreeNodeDto(
 
     @Schema(description = "название категории товара")
     val title: String,
+
+    @Schema(description = "иконка категории")
+    val iconUrl: String?
 ) {
     @Schema(description = "дочерние категории")
     var children: List<CategoryTreeNodeDto> = ArrayList()
@@ -17,7 +20,8 @@ data class CategoryTreeNodeDto(
         fun fromProjection(projection: CategoryProjection): CategoryTreeNodeDto {
             return CategoryTreeNodeDto(
                 id = projection.getId().toString(),
-                title = projection.getTitle()
+                title = projection.getTitle(),
+                iconUrl = projection.getIconUrl()
             )
         }
     }

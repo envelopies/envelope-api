@@ -9,6 +9,9 @@ data class CategoryDto(
     @Schema(description = "название категории товара")
     val title: String,
 
+    @Schema(description = "иконка категории")
+    val iconUrl: String?,
+
     @Schema(description = "ID родительской категории")
     val parentCategoryId: String?
 )

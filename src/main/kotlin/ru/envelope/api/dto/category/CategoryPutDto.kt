@@ -7,6 +7,9 @@ data class CategoryPutDto(
     @Schema(description = "название категории")
     val title: String?,
 
+    @Schema(description = "иконка категории")
+    val iconUrl: String?,
+
     @Schema(description = "удалена ли категория")
     val removed: Boolean?,
 
