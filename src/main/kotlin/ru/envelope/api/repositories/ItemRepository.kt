@@ -17,10 +17,15 @@ interface ItemRepository : JpaRepository<Item, UUID> {
                i.price AS price,
                i.created_at AS createdAt,
                u.username AS username,
-               c.title AS category
+               c.title AS category,
+               l.title AS deliveryAddress
           FROM items i
           JOIN users u ON i.user_id = u.id
           JOIN categories c ON i.category_id = c.id
+          LEFT JOIN items_delivery_addresses i_l ON i.id = i_l.item_id
+          LEFT JOIN locations l ON i_l.delivery_addresses_id = l.id
+         WHERE i.removed = false
+           AND (l.id IS NULL OR l.removed = false)
     """, countQuery = """
         SELECT COUNT(*)
           FROM items
@@ -34,15 +39,17 @@ interface ItemRepository : JpaRepository<Item, UUID> {
                i.price as price,
                i.createdAt as createdAt,
                u.username as username,
-               c.title as category
+               c.title as category,
+               i_l.title as deliveryAddress
           from Item i
           join i.createdBy u
           join i.category c
+          left join i.deliveryAddresses i_l
          where i.id = :id
            and i.removed = false
-    """
-    )
-    fun findByIdWithProjection(id: UUID): ItemProjection?
+           and (i_l is null or i_l.removed = false)
+    """)
+    fun findByIdWithProjection(id: UUID): List<ItemProjection>
 
     @Modifying
     @Query("""

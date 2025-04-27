@@ -35,7 +35,10 @@ Content-Type: application/json
   "title": "Тестовое название",
   "description": "Тестовое описание\n{{$random.uuid}}",
   "price": 900,
-  "categoryId": "a408461a-5eed-4913-b133-0e62f28ce726"
+  "categoryId": "49792d73-f64e-4e46-9845-d6c10fa612c2",
+  "deliveryAddresses": [
+    "cbe0c47d-731a-4d5c-ac48-2e76dbc87719"
+  ]
 }
 
 > {%
@@ -49,7 +52,11 @@ Content-Type: application/json
 
 {
   "title": "Новое название",
-  "published": true
+  "published": true,
+  "deliveryAddresses": [
+    "cbe0c47d-731a-4d5c-ac48-2e76dbc87719",
+    "a9383bec-8ffb-4d96-8296-bc91647ea28d"
+  ]
 }
 
 ### Удалить товар
@@ -71,7 +78,7 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-  "title": "НВК 2",
+  "title": "НВК 1",
   "latitude": 56.771573,
   "longitude": 60.762416
 }
@@ -86,7 +93,7 @@ Authorization: Bearer {{access_token}}
 Content-Type: application/json
 
 {
-  "title": "НВК 2"
+  "title": "НВК №2"
 }
 
 ### Ошибочное изменение места доставки

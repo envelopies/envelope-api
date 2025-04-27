@@ -11,4 +11,5 @@ interface ItemProjection {
     fun getCreatedAt(): Instant
     fun getUsername(): String
     fun getCategory(): String
+    fun getDeliveryAddress(): String?
 }

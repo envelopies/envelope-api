@@ -11,24 +11,29 @@ import ru.envelope.api.entities.User
 import ru.envelope.api.exceptions.CategoryNotFoundException
 import ru.envelope.api.exceptions.ItemNotFoundException
 import ru.envelope.api.mappers.ItemProjectionMapper
+import ru.envelope.api.projections.ItemProjection
 import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
+import ru.envelope.api.repositories.LocationRepository
 import java.util.*
 
 @Service
 class ItemServiceV1(
     private val itemRepository: ItemRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val locationRepository: LocationRepository
 ) : ItemService {
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
         val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
         return itemRepository.findAllWithProjection(pageRequest)
-            .map(ItemProjectionMapper)
+            .groupBy(ItemProjection::getId)
+            .values
+            .map(ItemProjectionMapper::apply)
             .toList()
     }
 
     override fun getItem(id: UUID): ItemDto? {
-        return itemRepository.findByIdWithProjection(id)?.let(ItemProjectionMapper::apply)
+        return itemRepository.findByIdWithProjection(id).let(ItemProjectionMapper::apply)
     }
 
     override fun createItem(itemDto: ItemPostDto, user: User): ItemDto {
@@ -38,12 +43,22 @@ class ItemServiceV1(
             throw CategoryNotFoundException(itemDto.categoryId)
         }
 
-        val item = itemRepository.save(Item(
+        var item = Item(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
             category = category.get()
-        ))
+        )
+
+        if (itemDto.deliveryAddresses?.isEmpty() == false) {
+            item.deliveryAddresses = itemDto.deliveryAddresses
+                .map { locationRepository.findById(it) }
+                .filter { it.isPresent }
+                .map { it.get() }
+                .toSet()
+        }
+
+        item = itemRepository.save(item)
 
         return getItem(item.id)!!
     }
@@ -64,6 +79,13 @@ class ItemServiceV1(
         }
         if (itemDto.price != null) {
             item.price = itemDto.price
+        }
+        if (itemDto.deliveryAddresses?.isEmpty() == false) {
+            item.deliveryAddresses = itemDto.deliveryAddresses
+                .map { locationRepository.findById(it) }
+                .filter { it.isPresent }
+                .map { it.get() }
+                .toSet()
         }
         // только админ может разрешать показывать товар
         if (itemDto.published != null && user.authorities.any { it == "ROLE_ADMIN" }) {
