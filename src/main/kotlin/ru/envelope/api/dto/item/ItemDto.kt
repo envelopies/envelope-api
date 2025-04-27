@@ -23,4 +23,7 @@ data class ItemDto(
 
     @Schema(description = "категория, к которой относится товар")
     val category: String?,
+
+    @Schema(description = "список мест доставки")
+    val deliveryAddresses: List<String>
 )

@@ -14,5 +14,8 @@ data class ItemPostDto(
     val price: Int,
 
     @Schema(description = "идентификатор категории, к которой относится товар")
-    val categoryId: UUID
+    val categoryId: UUID,
+
+    @Schema(description = "список UUID мест доставки")
+    val deliveryAddresses: List<UUID>?
 )

@@ -5,14 +5,20 @@ import ru.envelope.api.projections.ItemProjection
 import ru.envelope.api.util.format
 import java.util.function.Function
 
-object ItemProjectionMapper: Function<ItemProjection, ItemDto> {
-    override fun apply(projection: ItemProjection): ItemDto = ItemDto(
-        id = projection.getId().toString(),
-        title = projection.getTitle(),
-        description = projection.getDescription(),
-        price = projection.getPrice(),
-        createdAt = projection.getCreatedAt().format(),
-        username = projection.getUsername(),
-        category = projection.getCategory(),
-    )
+object ItemProjectionMapper: Function<List<ItemProjection>, ItemDto> {
+    override fun apply(projections: List<ItemProjection>): ItemDto {
+        val projection = projections.first()
+        return ItemDto(
+            id = projection.getId().toString(),
+            title = projection.getTitle(),
+            description = projection.getDescription(),
+            price = projection.getPrice(),
+            createdAt = projection.getCreatedAt().format(),
+            username = projection.getUsername(),
+            category = projection.getCategory(),
+            deliveryAddresses = projections
+                .mapNotNull { it.getDeliveryAddress() }
+                .toList()
+        )
+    }
 }
