@@ -31,7 +31,10 @@ class Item(
     var category: Category,
 
     @ManyToMany(targetEntity = Location::class)
-    var deliveryAddresses: Set<Location> = mutableSetOf()
+    var deliveryAddresses: Set<Location> = mutableSetOf(),
+
+    @ManyToMany(targetEntity = Picture::class)
+    var pictures: Set<Picture> = mutableSetOf(),
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
