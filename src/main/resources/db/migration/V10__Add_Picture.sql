@@ -8,7 +8,6 @@ CREATE TABLE items_pictures
 CREATE TABLE pictures
 (
     id    UUID         NOT NULL,
-    title VARCHAR(255) NOT NULL,
     CONSTRAINT pk_pictures PRIMARY KEY (id)
 );
 

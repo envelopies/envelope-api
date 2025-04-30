@@ -10,6 +10,7 @@ services:
     - "8080:8080"
     volumes:
     - ./application.properties:/app/application.properties:ro
+    - ./images:/app/images:rw
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://envelope-db:5432/${ENVELOPE_DB}
       SPRING_DATASOURCE_USERNAME: ${ENVELOPE_USER}
