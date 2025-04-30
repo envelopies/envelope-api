@@ -1,0 +1,41 @@
+package ru.envelope.api.services
+
+import org.springframework.http.MediaType
+import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+import ru.envelope.api.config.PictureConfig
+import ru.envelope.api.entities.Picture
+import ru.envelope.api.exceptions.NotPictureFileException
+import ru.envelope.api.repositories.PictureRepository
+import java.io.File
+import java.nio.file.Path
+import java.util.*
+
+@Service
+class PictureServiceV1(
+    private val pictureConfig: PictureConfig,
+    private val pictureRepository: PictureRepository,
+    private val webPConverterService: WebPConverterService
+) : PictureService {
+    private val enabledContentTypes = setOf(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/webp")
+
+    override fun createPicture(blob: MultipartFile): UUID {
+        if (!enabledContentTypes.contains(blob.contentType)) {
+            throw NotPictureFileException()
+        }
+
+        val pictureEntity = pictureRepository.save(Picture())
+
+        if (blob.contentType != "image/webp") {
+            val tempFile = File.createTempFile("nvk", ".png")
+            blob.transferTo(tempFile)
+            webPConverterService.convertAndSave(tempFile, getFullPath(pictureEntity.id.toString()))
+        } else {
+            blob.transferTo(getFullPath(pictureEntity.id.toString()))
+        }
+
+        return pictureEntity.id
+    }
+
+    private fun getFullPath(id: String): Path = Path.of(pictureConfig.baseDir, "${id}.webp")
+}

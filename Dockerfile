@@ -4,7 +4,12 @@ COPY --chown=gradle:gradle . .
 RUN gradle build --quiet
 
 FROM bellsoft/liberica-openjre-alpine-musl:21.0.4-9
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup -S spring && \
+    adduser -S spring -G spring && \
+    apk update && \
+    apk add libwebp libwebp-tools && \
+    rm -rf /var/cache/* && \
+    mkdir -p /app/images
 USER spring
 EXPOSE 8080
 WORKDIR /app
