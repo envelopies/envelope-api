@@ -23,5 +23,8 @@ data class ItemPutDto(
     val categoryId: UUID?,
 
     @Schema(description = "список UUID мест доставки")
-    val deliveryAddresses: List<UUID>?
+    val deliveryAddresses: List<UUID>?,
+
+    @Schema(description = "список UUID картинок")
+    val pictures: List<UUID>?
 )

@@ -12,4 +12,5 @@ interface ItemProjection {
     fun getUsername(): String
     fun getCategory(): String
     fun getDeliveryAddress(): String?
+    fun getPictureId(): String?
 }

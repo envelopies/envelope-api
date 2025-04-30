@@ -18,12 +18,14 @@ interface ItemRepository : JpaRepository<Item, UUID> {
                i.created_at AS createdAt,
                u.username AS username,
                c.title AS category,
-               l.title AS deliveryAddress
+               l.title AS deliveryAddress,
+               i_p.pictures_id AS pictureId
           FROM items i
           JOIN users u ON i.user_id = u.id
           JOIN categories c ON i.category_id = c.id
           LEFT JOIN items_delivery_addresses i_l ON i.id = i_l.item_id
           LEFT JOIN locations l ON i_l.delivery_addresses_id = l.id
+          LEFT JOIN items_pictures i_p ON i.id = i_p.item_id
          WHERE i.removed = false
            AND (l.id IS NULL OR l.removed = false)
     """, countQuery = """
@@ -40,11 +42,13 @@ interface ItemRepository : JpaRepository<Item, UUID> {
                i.createdAt as createdAt,
                u.username as username,
                c.title as category,
-               i_l.title as deliveryAddress
+               i_l.title as deliveryAddress,
+               p.id as pictureId
           from Item i
           join i.createdBy u
           join i.category c
           left join i.deliveryAddresses i_l
+          left join i.pictures p
          where i.id = :id
            and i.removed = false
            and (i_l is null or i_l.removed = false)
@@ -59,4 +63,11 @@ interface ItemRepository : JpaRepository<Item, UUID> {
            and i.removed = false
     """)
     fun setRemovedOnCategoryItems(removingCategoryId: UUID)
+
+    @Query("""
+        from Item i
+        join i.pictures p
+        where p.id = :id
+    """)
+    fun getItemsByPictureId(id: UUID): List<Item>
 }

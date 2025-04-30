@@ -15,13 +15,15 @@ import ru.envelope.api.projections.ItemProjection
 import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.repositories.LocationRepository
+import ru.envelope.api.repositories.PictureRepository
 import java.util.*
 
 @Service
 class ItemServiceV1(
     private val itemRepository: ItemRepository,
     private val categoryRepository: CategoryRepository,
-    private val locationRepository: LocationRepository
+    private val locationRepository: LocationRepository,
+    private val pictureRepository: PictureRepository,
 ) : ItemService {
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
         val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
@@ -58,6 +60,14 @@ class ItemServiceV1(
                 .toSet()
         }
 
+        if (itemDto.pictures?.isEmpty() == false) {
+            item.pictures = itemDto.pictures
+                .map { pictureRepository.findById(it) }
+                .filter { it.isPresent }
+                .map { it.get() }
+                .toSet()
+        }
+
         item = itemRepository.save(item)
 
         return getItem(item.id)!!
@@ -83,6 +93,13 @@ class ItemServiceV1(
         if (itemDto.deliveryAddresses?.isEmpty() == false) {
             item.deliveryAddresses = itemDto.deliveryAddresses
                 .map { locationRepository.findById(it) }
+                .filter { it.isPresent }
+                .map { it.get() }
+                .toSet()
+        }
+        if (itemDto.pictures?.isEmpty() == false) {
+            item.pictures = itemDto.pictures
+                .map { pictureRepository.findById(it) }
                 .filter { it.isPresent }
                 .map { it.get() }
                 .toSet()

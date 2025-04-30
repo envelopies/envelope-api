@@ -18,6 +18,10 @@ object ItemProjectionMapper: Function<List<ItemProjection>, ItemDto> {
             category = projection.getCategory(),
             deliveryAddresses = projections
                 .mapNotNull { it.getDeliveryAddress() }
+                .toList(),
+            pictures = projections
+                .mapNotNull { it.getPictureId() }
+                .map { "https://nvk1.store/images/${it}.webp" }
                 .toList()
         )
     }

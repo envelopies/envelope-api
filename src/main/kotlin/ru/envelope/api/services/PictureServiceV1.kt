@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import ru.envelope.api.config.PictureConfig
 import ru.envelope.api.entities.Picture
+import ru.envelope.api.entities.User
+import ru.envelope.api.exceptions.IllegalAccessToPictureException
 import ru.envelope.api.exceptions.NotPictureFileException
+import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.repositories.PictureRepository
 import java.io.File
 import java.nio.file.Path
@@ -15,6 +18,7 @@ import java.util.*
 class PictureServiceV1(
     private val pictureConfig: PictureConfig,
     private val pictureRepository: PictureRepository,
+    private val itemRepository: ItemRepository,
     private val webPConverterService: WebPConverterService
 ) : PictureService {
     private val enabledContentTypes = setOf(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/webp")
@@ -35,6 +39,26 @@ class PictureServiceV1(
         }
 
         return pictureEntity.id
+    }
+
+    override fun deletePicture(id: UUID, user: User) {
+        val itemsWithPicture = itemRepository.getItemsByPictureId(id)
+
+        if (itemsWithPicture.isEmpty()
+            || itemsWithPicture.all { it.createdBy.id == user.id }
+            || user.authorities.any { it == "ROLE_ADMIN" })
+        {
+            pictureRepository.deleteById(id)
+            try {
+                getFullPath(id.toString()).toFile().delete()
+            } catch (e: Exception) {
+                // suppress
+            }
+        }
+
+        if (!user.authorities.any { it == "ROLE_ADMIN" }) {
+            throw IllegalAccessToPictureException(itemsWithPicture.filter { it.createdBy.id != user.id }.map { it.id })
+        }
     }
 
     private fun getFullPath(id: String): Path = Path.of(pictureConfig.baseDir, "${id}.webp")
