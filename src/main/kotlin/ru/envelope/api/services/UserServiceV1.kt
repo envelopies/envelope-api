@@ -4,7 +4,10 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import ru.envelope.api.dto.user.UserDto
+import ru.envelope.api.dto.user.UserPutDto
 import ru.envelope.api.entities.User
+import ru.envelope.api.exceptions.UserNotFoundException
+import ru.envelope.api.mappers.UserMapper
 import ru.envelope.api.mappers.UsersProjectionMapper
 import ru.envelope.api.repositories.UserRepository
 
@@ -32,5 +35,23 @@ class UserServiceV1(
             fullName = firstName + if (lastName != null) " $lastName" else "",
             username = username,
             verified = false))
+    }
+
+    override fun updateUser(id: Long, userDto: UserPutDto): UserDto {
+        val userEntity = userRepository.findById(id)
+
+        if (userEntity.isEmpty) {
+            throw UserNotFoundException(id)
+        }
+
+        val user = userEntity.get()
+        if (userDto.verified != null) {
+            user.verified = userDto.verified
+        }
+        if (userDto.roles != null) {
+            user.authorities = userDto.roles.toMutableSet()
+        }
+
+        return UserMapper.apply(userRepository.save(user))
     }
 }

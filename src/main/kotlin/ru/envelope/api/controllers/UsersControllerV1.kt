@@ -26,7 +26,7 @@ class UsersControllerV1(
     fun getUsers(
         @RequestParam("pageNumber", required = false, defaultValue = "0") pageNumber: Int,
         @RequestParam("pageSize", required = false, defaultValue = "10") pageSize: Int,
-        @RequestParam("sortField", required = false, defaultValue = "createdAt") sortField: String,
+        @RequestParam("sortField", required = false, defaultValue = "id") sortField: String,
         @RequestParam("sortDirection", required = false, defaultValue = "DESC") sortDirection: Sort.Direction,
     ): List<UserDto> {
         return userService.getUsers(pageNumber, pageSize, sortField, sortDirection)
