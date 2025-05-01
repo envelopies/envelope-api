@@ -11,6 +11,7 @@ interface UserRepository: JpaRepository<User, Long> {
     @Query(value = """
         SELECT u.id AS id,
                u.username AS username,
+               u.full_name AS fullname,
                u.verified AS verified,
                a.authority AS authority
           FROM users AS u

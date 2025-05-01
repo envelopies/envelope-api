@@ -10,6 +10,7 @@ object UsersProjectionMapper: Function<List<UserProjection>, UserDto> {
         return UserDto(
             id = example.getId(),
             username = example.getUsername(),
+            fullname = example.getFullname(),
             verified = example.isVerified(),
             roles = projections.map { it.getAuthority() }
         )

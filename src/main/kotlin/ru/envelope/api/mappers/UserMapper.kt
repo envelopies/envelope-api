@@ -8,6 +8,7 @@ object UserMapper : Function<User, UserDto> {
     override fun apply(example: User): UserDto = UserDto(
         id = example.id,
         username = example.username ?: "",
+        fullname = example.fullName,
         verified = example.verified,
         roles = example.authorities.toList()
     )

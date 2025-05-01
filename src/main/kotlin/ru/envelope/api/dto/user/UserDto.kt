@@ -9,6 +9,9 @@ data class UserDto(
     @Schema(description = "ник пользователя")
     val username: String,
 
+    @Schema(description = "имя в профиле")
+    val fullname: String,
+
     @Schema(description = "подтверждённая ли учётная запись")
     val verified: Boolean,
 
