@@ -6,11 +6,9 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Sort
 import org.springframework.http.MediaType
 import org.springframework.security.access.annotation.Secured
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import ru.envelope.api.dto.user.UserDto
+import ru.envelope.api.dto.user.UserPutDto
 import ru.envelope.api.services.UserService
 
 @Tag(name = "users (v1)", description = "управление пользователями")
@@ -30,5 +28,14 @@ class UsersControllerV1(
         @RequestParam("sortDirection", required = false, defaultValue = "DESC") sortDirection: Sort.Direction,
     ): List<UserDto> {
         return userService.getUsers(pageNumber, pageSize, sortField, sortDirection)
+    }
+
+    @Operation(summary = "изменение пользователя")
+    @PutMapping("{id}")
+    fun updateUser(
+        @PathVariable id: Long,
+        @RequestBody userDto: UserPutDto
+    ): UserDto {
+        return userService.updateUser(id, userDto)
     }
 }
