@@ -5,5 +5,5 @@ interface UserProjection {
     fun getUsername(): String
     fun getFullname(): String
     fun isVerified(): Boolean
-    fun getAuthority(): String
+    fun getAuthority(): String?
 }
