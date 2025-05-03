@@ -22,7 +22,7 @@ class ItemControllerTests {
         mockMvc.get("/v1/items") {
 
         }.andExpect {
-            status { isOk() }
+            status { isCreated() }
             content { contentType(MediaType.APPLICATION_JSON) }
             content { json("""[]""") }
         }
