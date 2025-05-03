@@ -96,6 +96,15 @@ class ItemServiceV1(
         if (itemDto.price != null) {
             item.price = itemDto.price
         }
+        if (itemDto.categoryId != null) {
+            val category = categoryRepository.findById(itemDto.categoryId)
+
+            if (category.isEmpty) {
+                throw CategoryNotFoundException(itemDto.categoryId)
+            }
+
+            item.category = category.get()
+        }
         if (itemDto.deliveryAddresses?.isEmpty() == false) {
             item.deliveryAddresses = itemDto.deliveryAddresses
                 .map { locationRepository.findById(it) }
