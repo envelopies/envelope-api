@@ -22,15 +22,10 @@ class AuthServiceV1(
             throw IllegalTelegramTokenException()
         }
 
-        val user = userService.getUser(telegramAuthData.id)
+        var user = userService.getUser(telegramAuthData.id)
 
         if (user == null) {
-            userService.createUser(telegramAuthData.id, telegramAuthData.firstName, telegramAuthData.lastName, telegramAuthData.username)
-
-            return AuthResponseDto(
-                success = true,
-                token = null
-            )
+            user = userService.createUser(telegramAuthData.id, telegramAuthData.firstName, telegramAuthData.lastName, telegramAuthData.username)
         }
 
         return AuthResponseDto(
