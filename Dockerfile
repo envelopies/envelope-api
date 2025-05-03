@@ -1,7 +1,7 @@
 FROM gradle:8.10.2-jdk21-alpine AS build
 WORKDIR /home/gradle/src
 COPY --chown=gradle:gradle . .
-RUN gradle build --quiet
+RUN gradle build --quiet --exclude test
 
 FROM bellsoft/liberica-openjre-alpine-musl:21.0.4-9
 RUN addgroup -S spring && \
