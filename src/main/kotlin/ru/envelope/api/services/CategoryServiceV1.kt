@@ -24,7 +24,7 @@ class CategoryServiceV1(
     private val itemRepository: ItemRepository
 ): CategoryService {
     companion object {
-        val allowedSortFields = setOf("id")
+        val allowedSortFields = setOf("title")
     }
 
     override fun getCategories(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<CategoryDto> {

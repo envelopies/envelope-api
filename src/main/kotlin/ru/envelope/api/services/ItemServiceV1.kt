@@ -27,7 +27,8 @@ class ItemServiceV1(
     private val pictureRepository: PictureRepository,
 ) : ItemService {
     companion object {
-        val allowedSortFields = setOf("id")
+        val allowedSortFields = setOf("title", "price", "published", "createdAt", "category", "deliveryAddresses")
+        val sortReplacements = mapOf("category" to "c.title", "deliveryAddresses" to "l.title")
     }
 
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
@@ -136,6 +137,10 @@ class ItemServiceV1(
         if (!allowedSortFields.contains(sortField)) {
             throw BadSortFieldException(allowedSortFields)
         }
-        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
+        var sortFieldInEntity = sortField
+        if (sortReplacements.containsKey(sortField)) {
+            sortFieldInEntity = sortReplacements[sortField]!!
+        }
+        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortFieldInEntity))
     }
 }

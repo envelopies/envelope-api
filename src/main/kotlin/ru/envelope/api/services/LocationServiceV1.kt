@@ -21,7 +21,7 @@ class LocationServiceV1(
     private val locationRepository: LocationRepository
 ): LocationService {
     companion object {
-        val allowedSortFields = setOf("id")
+        val allowedSortFields = setOf("title")
     }
 
     override fun getLocations(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<LocationDto> {
