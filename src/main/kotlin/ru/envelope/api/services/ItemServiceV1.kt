@@ -11,6 +11,7 @@ import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
 import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.CategoryNotFoundException
+import ru.envelope.api.exceptions.IllegalAccessException
 import ru.envelope.api.exceptions.ItemNotFoundException
 import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.projections.ItemProjection
@@ -18,6 +19,7 @@ import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.repositories.LocationRepository
 import ru.envelope.api.repositories.PictureRepository
+import ru.envelope.api.util.isAdminOrSpecificId
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
@@ -86,10 +88,17 @@ class ItemServiceV1(
         val itemEntity = itemRepository.findById(id)
 
         if (itemEntity.isEmpty) {
+            logger.warn { "${user.id} пытался обновить товар ${id}, но такого товара не существует" }
             throw ItemNotFoundException(id)
         }
 
         val item = itemEntity.get()
+
+        if (!isAdminOrSpecificId(user, item.createdBy.id)) {
+            logger.warn { "${user.id} пытался получить доступ к ${id}, но не является его владельцем" }
+            throw IllegalAccessException()
+        }
+
         if (itemDto.title != null) {
             item.title = itemDto.title
         }
@@ -103,6 +112,7 @@ class ItemServiceV1(
             val category = categoryRepository.findById(itemDto.categoryId)
 
             if (category.isEmpty) {
+                logger.warn { "${user.id} пытался выставить товару $id категорию ${itemDto.categoryId}, но не знал, что её не существует" }
                 throw CategoryNotFoundException(itemDto.categoryId)
             }
 
@@ -142,12 +152,14 @@ class ItemServiceV1(
             val item = itemEntity.get()
             item.removed = true
             itemRepository.save(item)
+        } else {
+            logger.warn { "Кто-то пытался удалить товар ${id}, но такого товара не существует" }
         }
     }
 
     private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
         if (!allowedSortFields.contains(sortField)) {
-            logger.warn { "Кто-то пытался использовать $sortField как поле сортировки Item" }
+            logger.warn { "Кто-то пытался использовать $sortField как поле сортировки товара" }
             throw BadSortFieldException(allowedSortFields)
         }
         var sortFieldInEntity = sortField

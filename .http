@@ -16,7 +16,7 @@ Content-Type: application/json
  %}
 
 ### Получить список товаров
-GET http://localhost:8080/api/v1/items
+GET http://localhost:8080/api/v1/items?sortField=category
 
 ### Проверка CORS
 OPTIONS http://localhost:8080/api/v1/items
