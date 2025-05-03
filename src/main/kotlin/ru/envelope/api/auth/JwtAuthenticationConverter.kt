@@ -12,7 +12,7 @@ class JwtAuthenticationConverter(
     private val userService: UserService
 ): Converter<Jwt, AbstractAuthenticationToken> {
     override fun convert(jwt: Jwt): AbstractAuthenticationToken {
-        val user = userService.findById(jwt.subject.toLong())
+        val user = userService.getUser(jwt.subject.toLong())
         val authorities = jwt.getClaimAsStringList("roles").map(::SimpleGrantedAuthority)
 
         return object : AbstractAuthenticationToken(authorities) {

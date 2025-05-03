@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service
 import ru.envelope.api.dto.user.UserDto
 import ru.envelope.api.dto.user.UserPutDto
 import ru.envelope.api.entities.User
+import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.UserNotFoundException
 import ru.envelope.api.mappers.UserMapper
 import ru.envelope.api.mappers.UsersProjectionMapper
@@ -15,18 +16,22 @@ import ru.envelope.api.repositories.UserRepository
 class UserServiceV1(
     private val userRepository: UserRepository
 ): UserService {
-    override fun findById(id: Long): User? {
-        return userRepository.findById(id).orElse(null)
+    companion object {
+        val allowedSortFields = setOf("id")
     }
 
     override fun getUsers(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<UserDto> {
-        val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
+        val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
         return userRepository.findAllWithProjection(pageRequest)
             .groupBy { it.getId() }
             .values
             // из-за того что .values возвращает список, а не стрим
             .map(UsersProjectionMapper::apply)
             .toList()
+    }
+
+    override fun getUser(id: Long): User? {
+        return userRepository.findById(id).orElse(null)
     }
 
     override fun createUser(id: Long, firstName: String, lastName: String?, username: String?): User {
@@ -53,5 +58,12 @@ class UserServiceV1(
         }
 
         return UserMapper.apply(userRepository.save(user))
+    }
+
+    private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
+        if (!allowedSortFields.contains(sortField)) {
+            throw BadSortFieldException(allowedSortFields)
+        }
+        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
     }
 }

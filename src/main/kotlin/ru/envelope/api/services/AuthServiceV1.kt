@@ -22,7 +22,7 @@ class AuthServiceV1(
             throw IllegalTelegramTokenException()
         }
 
-        val user = userService.findById(telegramAuthData.id)
+        val user = userService.getUser(telegramAuthData.id)
 
         if (user == null) {
             userService.createUser(telegramAuthData.id, telegramAuthData.firstName, telegramAuthData.lastName, telegramAuthData.username)

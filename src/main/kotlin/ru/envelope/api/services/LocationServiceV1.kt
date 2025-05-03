@@ -7,9 +7,11 @@ import ru.envelope.api.dto.location.LocationDto
 import ru.envelope.api.dto.location.LocationPostDto
 import ru.envelope.api.dto.location.LocationPutDto
 import ru.envelope.api.entities.Location
+import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.LocationNotFoundException
 import ru.envelope.api.mappers.LocationMapper
 import ru.envelope.api.repositories.LocationRepository
+import ru.envelope.api.services.ItemServiceV1.Companion
 import java.math.BigDecimal
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
@@ -18,8 +20,12 @@ import kotlin.jvm.optionals.getOrNull
 class LocationServiceV1(
     private val locationRepository: LocationRepository
 ): LocationService {
+    companion object {
+        val allowedSortFields = setOf("id")
+    }
+
     override fun getLocations(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<LocationDto> {
-        val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
+        val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
         return locationRepository.findAll(pageRequest)
             .map(LocationMapper)
             .toList()
@@ -74,5 +80,12 @@ class LocationServiceV1(
             location.removed = true
             locationRepository.save(location)
         }
+    }
+
+    private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
+        if (!allowedSortFields.contains(sortField)) {
+            throw BadSortFieldException(allowedSortFields)
+        }
+        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
     }
 }

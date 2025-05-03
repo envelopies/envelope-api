@@ -21,7 +21,9 @@ class PictureServiceV1(
     private val itemRepository: ItemRepository,
     private val webPConverterService: WebPConverterService
 ) : PictureService {
-    private val enabledContentTypes = setOf(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/webp")
+    companion object {
+        val enabledContentTypes = setOf(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE, "image/webp")
+    }
 
     override fun createPicture(blob: MultipartFile): UUID {
         if (!enabledContentTypes.contains(blob.contentType)) {
@@ -31,11 +33,11 @@ class PictureServiceV1(
         val pictureEntity = pictureRepository.save(Picture())
 
         if (blob.contentType != "image/webp") {
-            val tempFile = File.createTempFile("nvk", ".png")
+            val tempFile = File.createTempFile("nvk", null)
             blob.transferTo(tempFile)
-            webPConverterService.convertAndSave(tempFile, getFullPath(pictureEntity.id.toString()))
+            webPConverterService.convertAndSave(tempFile, getPathToWebP(pictureEntity.id))
         } else {
-            blob.transferTo(getFullPath(pictureEntity.id.toString()))
+            blob.transferTo(getPathToWebP(pictureEntity.id))
         }
 
         return pictureEntity.id
@@ -48,11 +50,12 @@ class PictureServiceV1(
             || itemsWithPicture.all { it.createdBy.id == user.id }
             || user.authorities.any { it == "ROLE_ADMIN" })
         {
-            pictureRepository.deleteById(id)
             try {
-                getFullPath(id.toString()).toFile().delete()
+                val isOk = getPathToWebP(id).toFile().delete()
+                if (!isOk) throw Exception()
+                pictureRepository.deleteById(id)
             } catch (e: Exception) {
-                // suppress
+                throw Exception()
             }
         }
 
@@ -61,5 +64,5 @@ class PictureServiceV1(
         }
     }
 
-    private fun getFullPath(id: String): Path = Path.of(pictureConfig.baseDir, "${id}.webp")
+    private fun getPathToWebP(id: UUID): Path = Path.of(pictureConfig.baseDir, "${id}.webp")
 }

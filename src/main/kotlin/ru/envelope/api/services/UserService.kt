@@ -9,7 +9,7 @@ interface UserService {
     /**
      * Поиск пользователя по ID из телеграмм.
      */
-    fun findById(id: Long): User?
+    fun getUser(id: Long): User?
 
     /**
      * Поиск всех пользователей.

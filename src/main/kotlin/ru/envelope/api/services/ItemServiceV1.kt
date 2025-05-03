@@ -8,6 +8,7 @@ import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
+import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.CategoryNotFoundException
 import ru.envelope.api.exceptions.ItemNotFoundException
 import ru.envelope.api.mappers.ItemProjectionMapper
@@ -25,8 +26,12 @@ class ItemServiceV1(
     private val locationRepository: LocationRepository,
     private val pictureRepository: PictureRepository,
 ) : ItemService {
+    companion object {
+        val allowedSortFields = setOf("id")
+    }
+
     override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
-        val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
+        val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
         return itemRepository.findAllWithProjection(pageRequest)
             .groupBy(ItemProjection::getId)
             .values
@@ -125,5 +130,12 @@ class ItemServiceV1(
             item.removed = true
             itemRepository.save(item)
         }
+    }
+
+    private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
+        if (!allowedSortFields.contains(sortField)) {
+            throw BadSortFieldException(allowedSortFields)
+        }
+        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
     }
 }

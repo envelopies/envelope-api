@@ -9,11 +9,13 @@ import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
 import ru.envelope.api.dto.category.CategoryTreeNodeDto
 import ru.envelope.api.entities.Category
+import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.CategoryNotFoundException
 import ru.envelope.api.mappers.CategoryProjectionMapper
 import ru.envelope.api.projections.CategoryProjection
 import ru.envelope.api.repositories.CategoryRepository
 import ru.envelope.api.repositories.ItemRepository
+import ru.envelope.api.services.LocationServiceV1.Companion
 import java.util.*
 
 @Service
@@ -21,8 +23,12 @@ class CategoryServiceV1(
     private val categoryRepository: CategoryRepository,
     private val itemRepository: ItemRepository
 ): CategoryService {
+    companion object {
+        val allowedSortFields = setOf("id")
+    }
+
     override fun getCategories(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<CategoryDto> {
-        val pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
+        val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
         return categoryRepository.findAllWithProjection(pageRequest)
             .map(CategoryProjectionMapper)
             .toList()
@@ -106,5 +112,12 @@ class CategoryServiceV1(
 
             itemRepository.setRemovedOnCategoryItems(id)
         }
+    }
+
+    private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
+        if (!allowedSortFields.contains(sortField)) {
+            throw BadSortFieldException(allowedSortFields)
+        }
+        return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortField))
     }
 }
