@@ -1,5 +1,6 @@
 package ru.envelope.api.services
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
@@ -18,6 +19,8 @@ import ru.envelope.api.repositories.ItemRepository
 import ru.envelope.api.repositories.LocationRepository
 import ru.envelope.api.repositories.PictureRepository
 import java.util.*
+
+private val logger = KotlinLogging.logger {}
 
 @Service
 class ItemServiceV1(
@@ -144,6 +147,7 @@ class ItemServiceV1(
 
     private fun getPageRequest(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): PageRequest {
         if (!allowedSortFields.contains(sortField)) {
+            logger.warn { "Кто-то пытался использовать $sortField как поле сортировки Item" }
             throw BadSortFieldException(allowedSortFields)
         }
         var sortFieldInEntity = sortField
