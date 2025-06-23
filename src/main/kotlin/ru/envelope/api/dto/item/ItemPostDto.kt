@@ -13,6 +13,12 @@ data class ItemPostDto(
     @Schema(description = "цена товара в наиболее дробных единицах (копейках)", example = "12000")
     val price: Int,
 
+    @Schema(description = "количество товара, например, 1 (шт) или 5 (кг)", example = "1")
+    val quantity: Int,
+
+    @Schema(description = "единица измерения", example = "шт")
+    val unit: String,
+
     @Schema(description = "идентификатор категории, к которой относится товар", example = "c5c6f33f-cbdd-4737-8bdb-e5c35ea03709")
     val categoryId: UUID,
 

@@ -8,6 +8,8 @@ interface ItemProjection {
     fun getTitle(): String
     fun getDescription(): String
     fun getPrice(): Int
+    fun getQuantity(): Int
+    fun getUnit(): String
     fun getCreatedAt(): Instant
     fun getUsername(): String
     fun getCategory(): String

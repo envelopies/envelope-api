@@ -21,6 +21,12 @@ class Item(
     var price: Int,
 
     @Column(nullable = false)
+    var quantity: Int,
+
+    @Column(nullable = false)
+    var unit: String,
+
+    @Column(nullable = false)
     var published: Boolean = false,
 
     @Column(nullable = false)

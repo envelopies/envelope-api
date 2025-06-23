@@ -15,7 +15,13 @@ data class ItemDto(
     @Schema(description = "цена товара в наиболее дробных единицах (копейках)", example = "12000")
     val price: Int,
 
-    @Schema(description = "дата и время публикации", format = "yyyy-MM-dd'T'HH:mm:ss")
+    @Schema(description = "количество товара, например, 1 (шт) или 5 (кг)", example = "1")
+    val quantity: Int,
+
+    @Schema(description = "единица измерения", example = "шт")
+    val unit: String,
+
+    @Schema(description = "дата и время публикации", format = "yyyy-MM-dd'T'HH:mm:ss", example = "2025-06-23T12:24:59")
     val createdAt: String,
 
     @Schema(description = "имя пользователя, создавшего товар", example = "jointplayer")

@@ -13,6 +13,12 @@ data class ItemPutDto(
     @Schema(description = "цена товара в наиболее дробных единицах (копейках)", example = "12000")
     val price: Int?,
 
+    @Schema(description = "количество товара, например, 1 (шт) или 5 (кг)", example = "1")
+    val quantity: Int?,
+
+    @Schema(description = "единица измерения", example = "шт")
+    val unit: String?,
+
     @Schema(description = "опубликован ли товар на сайте (доступен только в админке)", example = "true")
     val published: Boolean?,
 

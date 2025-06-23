@@ -9,10 +9,7 @@ import ru.envelope.api.dto.item.ItemPostDto
 import ru.envelope.api.dto.item.ItemPutDto
 import ru.envelope.api.entities.Item
 import ru.envelope.api.entities.User
-import ru.envelope.api.exceptions.BadSortFieldException
-import ru.envelope.api.exceptions.CategoryNotFoundException
-import ru.envelope.api.exceptions.IllegalAccessException
-import ru.envelope.api.exceptions.ItemNotFoundException
+import ru.envelope.api.exceptions.*
 import ru.envelope.api.mappers.ItemProjectionMapper
 import ru.envelope.api.projections.ItemProjection
 import ru.envelope.api.repositories.CategoryRepository
@@ -56,10 +53,20 @@ class ItemServiceV1(
             throw CategoryNotFoundException(itemDto.categoryId)
         }
 
+        if (itemDto.price < 0) {
+            throw OutOfBoundException("price", itemDto.price, "price >= 0")
+        }
+
+        if (itemDto.quantity < 0) {
+            throw OutOfBoundException("quantity", itemDto.quantity, "quantity >= 0")
+        }
+
         var item = Item(
             title = itemDto.title,
             description = itemDto.description,
             price = itemDto.price,
+            quantity = itemDto.quantity,
+            unit = itemDto.unit,
             category = category.get()
         )
 
@@ -106,7 +113,19 @@ class ItemServiceV1(
             item.description = itemDto.description
         }
         if (itemDto.price != null) {
+            if (itemDto.price < 0) {
+                throw OutOfBoundException("price", itemDto.price, "price >= 0")
+            }
             item.price = itemDto.price
+        }
+        if (itemDto.quantity != null) {
+            if (itemDto.quantity < 0) {
+                throw OutOfBoundException("quantity", itemDto.quantity, "quantity >= 0")
+            }
+            item.quantity = itemDto.quantity
+        }
+        if (itemDto.unit != null) {
+            item.unit = itemDto.unit
         }
         if (itemDto.categoryId != null) {
             val category = categoryRepository.findById(itemDto.categoryId)

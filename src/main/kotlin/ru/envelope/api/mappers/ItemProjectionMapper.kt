@@ -13,6 +13,8 @@ object ItemProjectionMapper: Function<List<ItemProjection>, ItemDto> {
             title = projection.getTitle(),
             description = projection.getDescription(),
             price = projection.getPrice(),
+            quantity = projection.getQuantity(),
+            unit = projection.getUnit(),
             createdAt = projection.getCreatedAt().format(),
             username = projection.getUsername(),
             category = projection.getCategory(),
