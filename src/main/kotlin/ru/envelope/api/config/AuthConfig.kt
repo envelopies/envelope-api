@@ -24,7 +24,7 @@ import javax.crypto.spec.SecretKeySpec
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true)
 class AuthConfig(
     @Value("\${auth.secret}")
     private val secretKey: String,
