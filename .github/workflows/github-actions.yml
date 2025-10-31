@@ -5,6 +5,7 @@ on:
     branches:
     - 'main'
     - 'develop'
+    - 'feat-filters'
 
 env:
   REGISTRY: ghcr.io
