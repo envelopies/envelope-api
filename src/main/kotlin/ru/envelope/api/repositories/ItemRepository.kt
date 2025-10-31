@@ -36,6 +36,7 @@ interface ItemRepository : JpaRepository<Item, UUID> {
           FROM items
          WHERE i.removed = false
            AND (l.id IS NULL OR l.removed = false)
+           AND i.price between :min and :max
     """, nativeQuery = true)
     fun findAllWithProjection(min: Int, max: Int, page: Pageable): Page<ItemProjection>
 
