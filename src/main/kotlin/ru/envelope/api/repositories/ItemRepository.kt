@@ -34,6 +34,8 @@ interface ItemRepository : JpaRepository<Item, UUID> {
     """, countQuery = """
         SELECT COUNT(*)
           FROM items
+         WHERE i.removed = false
+           AND (l.id IS NULL OR l.removed = false)
     """, nativeQuery = true)
     fun findAllWithProjection(min: Int, max: Int, page: Pageable): Page<ItemProjection>
 
