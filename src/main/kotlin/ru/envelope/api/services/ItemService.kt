@@ -12,7 +12,8 @@ interface ItemService {
         pageNumber: Int,
         pageSize: Int,
         sortField: String,
-        sortOrder: Sort.Direction
+        sortOrder: Sort.Direction,
+        priceFilter: String?,
     ): List<ItemDto>
 
     fun getItem(id: UUID): ItemDto?

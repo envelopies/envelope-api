@@ -33,9 +33,10 @@ class ItemServiceV1(
         val sortReplacements = mapOf("category" to "c.title", "deliveryAddresses" to "l.title")
     }
 
-    override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<ItemDto> {
+    override fun getItems(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction, priceFilter: String?): List<ItemDto> {
         val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
-        return itemRepository.findAllWithProjection(pageRequest)
+        val priceFilterTuple = parsePriceFilter(priceFilter)
+        return itemRepository.findAllWithProjection(priceFilterTuple.min, priceFilterTuple.max, pageRequest)
             .groupBy(ItemProjection::getId)
             .values
             .map(ItemProjectionMapper::apply)
@@ -187,4 +188,45 @@ class ItemServiceV1(
         }
         return PageRequest.of(pageNumber, pageSize, Sort.by(sortOrder, sortFieldInEntity))
     }
+
+    private fun parsePriceFilter(priceFilter: String?): PriceFilter {
+        if (priceFilter == null || priceFilter.isBlank()) {
+            return PriceFilter(0, Int.MAX_VALUE)
+        }
+
+        val parts = priceFilter.split(":")
+        if (parts.size != 2) {
+            throw BadPriceFilterException()
+        }
+
+        var min: Int
+        try {
+            min = parts[0].toInt()
+        } catch (_: NumberFormatException) {
+            throw ApplicationException("Минимальная цена имеет неверный формат")
+        }
+
+        if (min < 0) {
+            throw OutOfBoundException("priceFilter.min", min, "больше 0")
+        }
+
+        var max: Int
+        try {
+            max = parts[1].toInt()
+        } catch (_: NumberFormatException) {
+            throw ApplicationException("Максимальная цена имеет неверный формат")
+        }
+
+        if (max < 0) {
+            throw OutOfBoundException("priceFilter.max", max, "больше 0")
+        }
+
+        if (max < min) {
+            throw OutOfBoundException("priceFilter.max", max, "больше $min")
+        }
+
+        return PriceFilter(min, max)
+    }
+
+    class PriceFilter(val min: Int, val max: Int)
 }

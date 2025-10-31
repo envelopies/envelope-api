@@ -1,6 +1,7 @@
 package ru.envelope.api.controllers
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Sort
@@ -30,8 +31,18 @@ class ItemControllerV1(
         @RequestParam("pageSize", required = false, defaultValue = "10") pageSize: Int,
         @RequestParam("sortField", required = false, defaultValue = "createdAt") sortField: String,
         @RequestParam("sortDirection", required = false, defaultValue = "DESC") sortDirection: Sort.Direction,
+        @RequestParam("price", required = false)
+        @Parameter(example = "10000:100000", description = """
+            указание минимальной и максимальной цены товаров в формате `<min>:<max>`
+            первое число это минимальная граница цены, второе - максимальная. оба могут отсутствовать
+            может быть в виде `10000:` то есть от 100 рублей,
+            `:100000` то есть до 1000 рублей,
+            `10000:100000` то есть от 100 до 1000 рублей
+            или `null` то есть любые цены
+            """)
+        priceFilter: String?,
     ): List<ItemDto> {
-        return itemService.getItems(pageNumber, pageSize, sortField, sortDirection)
+        return itemService.getItems(pageNumber, pageSize, sortField, sortDirection, priceFilter)
     }
 
     @Operation(summary = "получение информации о конкретном товаре")

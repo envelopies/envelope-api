@@ -30,11 +30,12 @@ interface ItemRepository : JpaRepository<Item, UUID> {
           LEFT JOIN items_pictures i_p ON i.id = i_p.item_id
          WHERE i.removed = false
            AND (l.id IS NULL OR l.removed = false)
+           AND i.price between :min and :max
     """, countQuery = """
         SELECT COUNT(*)
           FROM items
     """, nativeQuery = true)
-    fun findAllWithProjection(page: Pageable): Page<ItemProjection>
+    fun findAllWithProjection(min: Int, max: Int, page: Pageable): Page<ItemProjection>
 
     @Query("""
         select i.id as id,
