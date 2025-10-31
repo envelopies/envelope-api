@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration
 class OpenApiConfig {
     @Bean
     fun createOpenAPI(): OpenAPI = OpenAPI()
-        .servers(listOf(Server().url("https://kljmo-sjunq.fun"), Server().url("http://localhost:8080/api")))
+        .servers(listOf(Server().url("https://kljmo-sjunq.fun/api"), Server().url("http://localhost:8080/api")))
         .components(Components()
             .addSecuritySchemes("default", SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")))
 }
