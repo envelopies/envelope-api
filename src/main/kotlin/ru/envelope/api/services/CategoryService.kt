@@ -5,6 +5,7 @@ import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
 import ru.envelope.api.dto.category.CategoryTreeNodeDto
+import ru.envelope.api.dto.item.ItemDto
 import java.util.UUID
 
 interface CategoryService {
@@ -18,6 +19,8 @@ interface CategoryService {
     fun getCategoriesTree(): List<CategoryTreeNodeDto>
 
     fun getCategory(id: UUID): CategoryDto?
+
+    fun getItemsByCategoryId(id: UUID): List<ItemDto>
 
     fun createCategory(
         categoryDto: CategoryPostDto

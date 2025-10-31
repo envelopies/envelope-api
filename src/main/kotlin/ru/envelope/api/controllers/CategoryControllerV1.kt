@@ -14,6 +14,7 @@ import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
 import ru.envelope.api.dto.category.CategoryTreeNodeDto
+import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.services.CategoryService
 import java.net.URI
 import java.util.UUID
@@ -54,6 +55,12 @@ class CategoryControllerV1(
         } else {
             ResponseEntity.noContent().build()
         }
+    }
+
+    @Operation(summary = "получение подборки товаров по ID категории")
+    @GetMapping("{id}/items")
+    fun getItemsById(@PathVariable id: UUID): List<ItemDto> {
+        return categoryService.getItemsByCategoryId(id)
     }
 
     @Operation(summary = "создание новой категории")

@@ -8,6 +8,7 @@ import ru.envelope.api.dto.category.CategoryDto
 import ru.envelope.api.dto.category.CategoryPostDto
 import ru.envelope.api.dto.category.CategoryPutDto
 import ru.envelope.api.dto.category.CategoryTreeNodeDto
+import ru.envelope.api.dto.item.ItemDto
 import ru.envelope.api.entities.Category
 import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.CategoryNotFoundException
@@ -21,6 +22,7 @@ import java.util.*
 @Service
 class CategoryServiceV1(
     private val categoryRepository: CategoryRepository,
+    private val itemService: ItemService,
     private val itemRepository: ItemRepository
 ): CategoryService {
     companion object {
@@ -56,6 +58,10 @@ class CategoryServiceV1(
 
     override fun getCategory(id: UUID): CategoryDto? {
         return categoryRepository.findByIdWithProjection(id)?.let(CategoryProjectionMapper::apply)
+    }
+
+    override fun getItemsByCategoryId(id: UUID): List<ItemDto> {
+        return itemService.getRandomItems(id)
     }
 
     override fun createCategory(categoryDto: CategoryPostDto): CategoryDto {

@@ -78,4 +78,31 @@ interface ItemRepository : JpaRepository<Item, UUID> {
         where p.id = :id
     """)
     fun getItemsByPictureId(id: UUID): List<Item>
+
+
+    @Query(value = """
+        SELECT i.id AS id,
+               i.title AS title,
+               i.description AS description,
+               i.price AS price,
+               i.quantity AS quantity,
+               i.unit AS unit,
+               i.created_at AS createdAt,
+               u.username AS username,
+               c.title AS category,
+               l.title AS deliveryAddress,
+               i_p.pictures_id AS pictureId
+          FROM items i
+          JOIN users u ON i.user_id = u.id
+          JOIN categories c ON i.category_id = c.id
+          LEFT JOIN items_delivery_addresses i_l ON i.id = i_l.item_id
+          LEFT JOIN locations l ON i_l.delivery_addresses_id = l.id
+          LEFT JOIN items_pictures i_p ON i.id = i_p.item_id
+         WHERE i.removed = false
+           AND (l.id IS NULL OR l.removed = false)
+           AND c.id = :categoryId
+         ORDER BY RANDOM()
+         LIMIT 8
+    """, nativeQuery = true)
+    fun findRandomByCategory(categoryId: UUID): List<ItemProjection>
 }
