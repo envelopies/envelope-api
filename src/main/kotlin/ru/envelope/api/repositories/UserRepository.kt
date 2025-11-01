@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import ru.envelope.api.entities.User
 import ru.envelope.api.projections.UserProjection
+import ru.envelope.api.projections.UserSimpleProjection
 
 interface UserRepository: JpaRepository<User, Long> {
     @Query(value = """
@@ -21,4 +22,13 @@ interface UserRepository: JpaRepository<User, Long> {
           FROM users
     """, nativeQuery = true)
     fun findAllWithProjection(page: Pageable): Page<UserProjection>
+
+    @Query("""
+        select u.id as id,
+               u.fullName as name
+          from User u
+         where u.verified = true
+         order by random()
+        """)
+    fun findAllVerifiedSellers(): List<UserSimpleProjection>
 }
