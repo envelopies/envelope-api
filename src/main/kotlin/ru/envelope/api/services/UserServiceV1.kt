@@ -3,12 +3,14 @@ package ru.envelope.api.services
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import ru.envelope.api.dto.user.SellerDto
 import ru.envelope.api.dto.user.UserDto
 import ru.envelope.api.dto.user.UserPutDto
 import ru.envelope.api.entities.User
 import ru.envelope.api.exceptions.BadSortFieldException
 import ru.envelope.api.exceptions.UserNotFoundException
 import ru.envelope.api.mappers.UserMapper
+import ru.envelope.api.mappers.UserSimpleProjectionMapper
 import ru.envelope.api.mappers.UsersProjectionMapper
 import ru.envelope.api.repositories.UserRepository
 
@@ -27,6 +29,13 @@ class UserServiceV1(
             .values
             // из-за того что .values возвращает список, а не стрим
             .map(UsersProjectionMapper::apply)
+            .toList()
+    }
+
+    override fun getAllVerified(): List<SellerDto> {
+        return userRepository.findAllVerifiedSellers()
+            .stream()
+            .map(UserSimpleProjectionMapper)
             .toList()
     }
 
