@@ -39,7 +39,7 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
                c.iconUrl as iconUrl,
                c.parentCategory.id as parentCategoryId
           from Item i
-          join Category c
+          join i.category c
          where i.removed = false
            and i.createdBy.id = :sellerId
          group by c.id, c.title
