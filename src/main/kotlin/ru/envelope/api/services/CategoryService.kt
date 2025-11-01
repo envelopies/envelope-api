@@ -12,7 +12,8 @@ interface CategoryService {
         pageNumber: Int,
         pageSize: Int,
         sortField: String,
-        sortOrder: Sort.Direction
+        sortOrder: Sort.Direction,
+        sellerId: Long?
     ): List<CategoryDto>
 
     fun getCategoriesTree(): List<CategoryTreeNodeDto>

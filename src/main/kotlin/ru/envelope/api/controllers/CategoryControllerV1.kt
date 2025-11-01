@@ -1,6 +1,7 @@
 package ru.envelope.api.controllers
 
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Sort
@@ -30,8 +31,11 @@ class CategoryControllerV1(
         @RequestParam("pageSize", required = false, defaultValue = "10") pageSize: Int,
         @RequestParam("sortField", required = false, defaultValue = "title") sortField: String,
         @RequestParam("sortDirection", required = false, defaultValue = "ASC") sortDirection: Sort.Direction,
+        @RequestParam("sellerId", required = false)
+        @Parameter(description = "выдать только категории конкретного продавца")
+        sellerId: Long?,
     ): List<CategoryDto> {
-        return categoryService.getCategories(pageNumber, pageSize, sortField, sortDirection)
+        return categoryService.getCategories(pageNumber, pageSize, sortField, sortDirection, sellerId)
     }
 
     @Operation(summary = "получение всего списка категорий в виде дерева",

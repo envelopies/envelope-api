@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import ru.envelope.api.entities.Category
 import ru.envelope.api.projections.CategoryProjection
-import java.util.UUID
+import java.util.*
 
 interface CategoryRepository : JpaRepository<Category, UUID> {
     @Query(value = """
@@ -32,4 +32,17 @@ interface CategoryRepository : JpaRepository<Category, UUID> {
     """
     )
     fun findByIdWithProjection(id: UUID): CategoryProjection?
+
+    @Query("""
+        select c.id as id,
+               c.title as title,
+               c.iconUrl as iconUrl,
+               c.parentCategory.id as parentCategoryId
+          from Item i
+          join Category c
+         where i.removed = false
+           and i.createdBy.id = :sellerId
+         group by c.id, c.title
+        """)
+    fun findAllSellerCategories(sellerId: Long, page: Pageable): Page<CategoryProjection>
 }

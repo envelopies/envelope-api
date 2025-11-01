@@ -26,9 +26,16 @@ class CategoryServiceV1(
         val allowedSortFields = setOf("title")
     }
 
-    override fun getCategories(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction): List<CategoryDto> {
+    override fun getCategories(pageNumber: Int, pageSize: Int, sortField: String, sortOrder: Sort.Direction, sellerId: Long?): List<CategoryDto> {
         val pageRequest = getPageRequest(pageNumber, pageSize, sortField, sortOrder)
-        return categoryRepository.findAllWithProjection(pageRequest)
+
+        val projections = if (sellerId != null && sellerId != 0L) {
+            categoryRepository.findAllSellerCategories(sellerId, pageRequest)
+        } else {
+            categoryRepository.findAllWithProjection(pageRequest)
+        }
+
+        return projections
             .map(CategoryProjectionMapper)
             .toList()
     }
