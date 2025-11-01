@@ -40,6 +40,7 @@ class AuthConfig(
                 .requestMatchers("v1/items", "v1/items/{id}").permitAll()
                 .requestMatchers("v1/categories", "v1/categories/{id}", "v1/categories/tree").permitAll()
                 .requestMatchers("v1/locations", "v1/locations/{id}").permitAll()
+                .requestMatchers("v1/sellers/favorites").permitAll()
                 .anyRequest().authenticated()
         }
         .cors(Customizer.withDefaults())
