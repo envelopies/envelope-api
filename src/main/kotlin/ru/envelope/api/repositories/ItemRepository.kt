@@ -100,9 +100,8 @@ interface ItemRepository : JpaRepository<Item, UUID> {
           LEFT JOIN items_pictures i_p ON i.id = i_p.item_id
          WHERE i.removed = false
            AND (l.id IS NULL OR l.removed = false)
-           AND c.id = :categoryId
          ORDER BY RANDOM()
          LIMIT 8
     """, nativeQuery = true)
-    fun findRandomByCategory(categoryId: UUID): List<ItemProjection>
+    fun findRandom(): List<ItemProjection>
 }

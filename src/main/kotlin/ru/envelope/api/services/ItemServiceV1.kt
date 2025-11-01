@@ -43,14 +43,8 @@ class ItemServiceV1(
             .toList()
     }
 
-    override fun getRandomItems(categoryId: UUID): List<ItemDto> {
-        val category = categoryRepository.findById(categoryId)
-
-        if (category.isEmpty) {
-            throw CategoryNotFoundException(categoryId)
-        }
-
-        return itemRepository.findRandomByCategory(categoryId)
+    override fun getRandomItems(): List<ItemDto> {
+        return itemRepository.findRandom()
             .groupBy(ItemProjection::getId)
             .values
             .map(ItemProjectionMapper::apply)

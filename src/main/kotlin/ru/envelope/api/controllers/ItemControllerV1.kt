@@ -45,6 +45,12 @@ class ItemControllerV1(
         return itemService.getItems(pageNumber, pageSize, sortField, sortDirection, priceFilter)
     }
 
+    @Operation(summary = "получение случайных товаров", description = "выдаёт 8 случайных неудалённых товаров из базы")
+    @GetMapping("random")
+    fun getRandomItems(): List<ItemDto> {
+        return itemService.getRandomItems()
+    }
+
     @Operation(summary = "получение информации о конкретном товаре")
     @GetMapping("{id}")
     fun getItem(

@@ -16,9 +16,7 @@ interface ItemService {
         priceFilter: String?,
     ): List<ItemDto>
 
-    fun getRandomItems(
-        categoryId: UUID
-    ): List<ItemDto>
+    fun getRandomItems(): List<ItemDto>
 
     fun getItem(id: UUID): ItemDto?
 
