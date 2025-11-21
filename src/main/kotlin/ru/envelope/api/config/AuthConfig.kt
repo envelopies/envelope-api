@@ -35,13 +35,7 @@ class AuthConfig(
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain = httpSecurity
         .authorizeHttpRequests { auth ->
-            auth.requestMatchers("/swagger-ui.html", "/swagger-ui/*", "/v3/api-docs/**").permitAll()
-                .requestMatchers("v1/auth").permitAll()
-                .requestMatchers("v1/items", "v1/items/{id}").permitAll()
-                .requestMatchers("v1/categories", "v1/categories/{id}", "v1/categories/tree").permitAll()
-                .requestMatchers("v1/locations", "v1/locations/{id}").permitAll()
-                .requestMatchers("v1/sellers/favorites").permitAll()
-                .anyRequest().authenticated()
+            auth.anyRequest().permitAll()
         }
         .cors(Customizer.withDefaults())
         // TODO включить CSRF обратно
